@@ -21,8 +21,6 @@
         <activity
             android:name=".RecipeActivity"
             android:exported="true">
-            <intent-filter>
-            </intent-filter>
         </activity>
     </application>
 

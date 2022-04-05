@@ -3,4 +3,6 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="noLogin">Continue as Guest</string>
+    <string name="email">Email :</string>
+    <string name="password">Password :</string>
 </resources>
