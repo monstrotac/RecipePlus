@@ -23,8 +23,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
-    public void Register(View v){
+    public void RegisterPage(View v){
+        setContentView(R.layout.activity_register);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
+    public void Register(View v){
+        Login(v);
     }
 
     public  void ContinueGuest(View v){

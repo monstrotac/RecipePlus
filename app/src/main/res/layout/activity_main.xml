@@ -25,7 +25,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:onClick="Register"
+        android:onClick="RegisterPage"
         android:text="@string/register">
     </Button>
 
