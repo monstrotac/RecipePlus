@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="flame">#DD501D</color>
+    <color name="chestnut">#9B543B</color>
+    <color name="liver">#7A564A</color>
+    <color name="davy_grey">#585858</color>
 </resources>

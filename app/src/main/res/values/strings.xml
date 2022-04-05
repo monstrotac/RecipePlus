@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">RecipePlus</string>
+    <string name="app_name">Recipe+</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="noLogin">Continue as Guest</string>
 </resources>
