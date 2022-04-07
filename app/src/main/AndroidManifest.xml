@@ -11,7 +11,9 @@
         android:theme="@style/Theme.RecipePlus">
         <activity
             android:name=".MainActivity"
+            android:parentActivityName=".MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,6 +24,21 @@
             android:name=".RecipeActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".MainActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".MainActivity"
+            android:exported="true">
+        </activity>
+        <activity
+        android:name=".ShowRecipeActivity"
+        android:parentActivityName=".RecipeActivity"
+        android:exported="true">
+    </activity>
     </application>
 
 </manifest>

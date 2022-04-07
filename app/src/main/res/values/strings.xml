@@ -8,5 +8,7 @@
     <string name="firstname">Firstname :</string>
     <string name="lastname">Lastname :</string>
     <string name="username">Username :</string>
+    <string name="ingredients"><i><u>Ingredients :</u></i></string>
+    <string name="recipe"><i><u>Recipe :</u></i></string>
 
 </resources>

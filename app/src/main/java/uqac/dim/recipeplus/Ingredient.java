@@ -1,6 +1,8 @@
 package uqac.dim.recipeplus;
 
-public class Ingredient {
+import java.io.Serializable;
+
+public class Ingredient implements Serializable {
     private int id;
     private String name;
     private String desc;

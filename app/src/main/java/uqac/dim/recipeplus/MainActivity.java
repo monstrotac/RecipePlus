@@ -12,29 +12,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     public void LoginPage(View v){
-        setContentView(R.layout.activity_login);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    public void Login(View v){
-        Intent intent = new Intent(this, RecipeActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-    public void RegisterPage(View v){
-        setContentView(R.layout.activity_register);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
-    public void Register(View v){
-        Login(v);
+    public void RegisterPage(View v){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     public  void ContinueGuest(View v){
-        setContentView(R.layout.activity_recipe);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Intent intent = new Intent(this, RecipeActivity.class);
+        startActivity(intent);
     }
 }
