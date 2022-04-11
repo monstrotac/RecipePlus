@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ShowRecipeActivity extends AppCompatActivity {
 
+    //Gestion Image: Picasso / Glide
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
