@@ -9,6 +9,9 @@
     <string name="lastname">Lastname :</string>
     <string name="username">Username :</string>
     <string name="ingredients"><i><u>Ingredients :</u></i></string>
-    <string name="recipe"><i><u>Recipe :</u></i></string>
+    <string name="descript"><i><u>Description :</u></i></string>
+    <string name="recipe"><i><u>Instructions :</u></i></string>
+    <string name="images"><i><u>Images :</u></i></string>
+    <string name="bad_login">Bad Credentials</string>
 
 </resources>

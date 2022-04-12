@@ -31,5 +31,10 @@
         <item name="android:textColor">#E7E7E7</item>
         <item name="android:textSize">20sp</item>
     </style>
+    <style name="Theme.RecipePlus.error" parent = "Theme.RecipePlus">
+        <item name="android:textColor">#AC0202</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/error_bg</item>
+    </style>
 
 </resources>

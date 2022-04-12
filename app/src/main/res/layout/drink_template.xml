@@ -7,64 +7,126 @@
 
     tools:context=".ShowRecipeActivity"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/layout_bg"
-        android:orientation="vertical">
-
-        <TextView
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="15dp"
-            android:theme="@style/Theme.RecipePlus.recipeName"
-            android:id="@id/drinkName">
-        </TextView>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_bg"
+                android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="170dp"
-            android:layout_height="170dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/logo"
-            android:id="@+id/drinkImage">
-        </ImageView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:theme="@style/Theme.RecipePlus.recipeName"
+                    android:id="@id/drinkName">
+                </TextView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:gravity="center"
-            android:theme="@style/Theme.RecipePlus.titles"
-            android:text="@string/recipe">
-        </TextView>
+                <ImageView
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/logo"
+                    android:id="@+id/drinkImage">
+                </ImageView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="15dp"
-            android:theme="@style/Theme.RecipePlus.ingredients"
-            android:id="@+id/drinkInstruc">
-        </TextView>
-    </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:theme="@style/Theme.RecipePlus.titles"
+                    android:text="@string/descript">
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="15dp"
+                    android:theme="@style/Theme.RecipePlus.ingredients"
+                    android:id="@+id/drinkDesc">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/drinkIngredient"
+                android:background="@drawable/layout_bg"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:theme="@style/Theme.RecipePlus.titles"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ingredients">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_bg"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:theme="@style/Theme.RecipePlus.titles"
+                    android:text="@string/recipe">
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="15dp"
+                    android:theme="@style/Theme.RecipePlus.ingredients"
+                    android:id="@+id/drinkInstruct">
+                </TextView>
+            </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/drinkIngredient"
-        android:background="@drawable/layout_bg"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:theme="@style/Theme.RecipePlus.titles"
-            android:layout_height="wrap_content"
-            android:text="@string/ingredients">
-        </TextView>
-    </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_bg"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:theme="@style/Theme.RecipePlus.titles"
+                    android:text="@string/images">
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="15dp"
+                    android:theme="@style/Theme.RecipePlus.ingredients"
+                    android:id="@+id/drinkImages">
+                </TextView>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
 
 
 </LinearLayout>

@@ -37,7 +37,8 @@ public class ShowRecipeActivity extends AppCompatActivity {
         if(r != null){
             ((TextView)findViewById(R.id.drinkName)).setText(r.getName());
             //((ImageView)view.findViewById(R.id.drinkImage)).setImageResource();
-            ((TextView)findViewById(R.id.drinkInstruc)).setText(r.getInstruc());
+            ((TextView)findViewById(R.id.drinkInstruct)).setText(r.getInstruc());
+            ((TextView)findViewById(R.id.drinkDesc)).setText(r.getDesc());
             r.setIngredients(getIngredients(r.getId()));
 
             for(Ingredient ing:r.getIngredients()){
