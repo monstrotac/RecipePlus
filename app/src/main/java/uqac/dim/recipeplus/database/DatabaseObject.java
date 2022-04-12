@@ -21,6 +21,7 @@ public class DatabaseObject{
     //private variables
     private Connection activeConnection;
     private Statement statement;
+    private ResultSet loggedInUser;
     //public variables
 
     //Constructors
@@ -74,33 +75,26 @@ public class DatabaseObject{
     public ResultSet getUserImage(int userId) throws SQLException {
         return statement.executeQuery("SELECT image FROM USER_IMAGE WHERE userId = " + userId);
     }
-
-    public void Booga(){
-        System.out.println("Connecting database...");
-
-        System.out.println("Loading driver...");
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("Driver loaded!");
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Cannot find the driver in the classpath!", e);
-        }
-
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://192.168.0.17:3306/recipePlusDatabase", "RECIPEPLUSROOT", "UQAC2022")) {
-            System.out.println("Database connected!");
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("Select * from RECIPE");
-            while(rs.next()){
-                System.out.println(rs.getInt(1));
-                System.out.println(rs.getString(2));
-                System.out.println(rs.getString(3));
-                System.out.println(rs.getString(4));
+    /*
+    This section is dedicated to all of the user's connection activity.
+     */
+    //Attempts to find the information given in the database and returns true if found. It then keeps the user in the DB.
+    public Boolean attemptUserLogIn(String email, String password) throws SQLException {
+        ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = " + email + " AND password = " + password);
+        while (attempt.next()){
+            if (attempt.getString(1) != null){
+                loggedInUser = attempt;
+                return true;
             }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
         }
+        return false;
     }
-
-
+    //Logs out the user by returning the loggedInUser to null
+    public void disconnectUser (){
+        loggedInUser = null;
+    }
+    //Simple getter that returns the user and its informations.
+    public ResultSet getLoggedInUser() {
+        return loggedInUser;
+    }
 }
