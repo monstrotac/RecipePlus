@@ -45,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         temp = (EditText)findViewById(R.id.lastname);
         String lastname = temp.getText().toString();
 
-        if(email != null && password != null && firstname != null && lastname != null){
+        if(email != "" && password != "" && firstname != "" && lastname != ""){
             try {
                 if(database.attemptUserRegister(firstname,lastname,password,email)){
                     Intent intent = new Intent(this, RecipeActivity.class);
