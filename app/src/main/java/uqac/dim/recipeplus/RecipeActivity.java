@@ -53,7 +53,7 @@ public class RecipeActivity extends AppCompatActivity {
 
             while(rs.next()){
 
-                data.add(new Recipe(rs.getInt(1),rs.getString(3),rs.getString(4),new ArrayList<Ingredient>()));
+                data.add(new Recipe(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5),new ArrayList<Ingredient>()));
 
             }
         } catch (SQLException throwables) {
@@ -63,26 +63,13 @@ public class RecipeActivity extends AppCompatActivity {
         return data;
     }
 
-    private Recipe generateRecipe(){
-        Ingredient tempIng1 = new Ingredient(0,"Vodka","Alcohol",20.7f);
-        Ingredient tempIng2 = new Ingredient(1,"Rum","Alcohol",25.5f);
-        Ingredient tempIng3 = new Ingredient(2,"Coca Cola","Soft Drink",2.45f);
-
-        List<Ingredient> data = new ArrayList<Ingredient>();
-        data.add(tempIng1);
-        data.add(tempIng2);
-        data.add(tempIng3);
-
-        Recipe tempRec = new Recipe(0,"Test Drink","- Add One oz of Rum \n- Add One oz of Vodka \n- Add One can of Coca Cola \n- Mix and Drink with ice",data);
-
-        return tempRec;
-    }
-
     private void generateViewData(List<Recipe> data){
 
         for(Recipe r:data){
             View view = super.getLayoutInflater().inflate(R.layout.small_item_template, null);
             ((TextView)view.findViewById(R.id.drinkName)).setText(r.getName());
+            ((TextView)view.findViewById(R.id.drinkDesc)).setText(r.getDesc());
+
             view.setId(r.getId());
             view.setOnClickListener(favoriteListener);
             ((LinearLayout)findViewById(R.id.favorites)).addView(view);
