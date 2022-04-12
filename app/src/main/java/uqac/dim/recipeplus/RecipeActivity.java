@@ -16,27 +16,50 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import uqac.dim.recipeplus.database.DatabaseObject;
+
 public class RecipeActivity extends AppCompatActivity {
     private List<Recipe> recipes = new ArrayList<Recipe>();
+    private DatabaseObject database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-        recipes = loadRecipes();
+        try {
+            database = new DatabaseObject();
+            recipes = loadRecipes();
+            generateViewData(recipes);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        generateViewData(recipes.get(0));
     }
 
     private List<Recipe> loadRecipes(){
+        ResultSet rs = null;
         List<Recipe> data = new ArrayList<Recipe>();
-        data.add(generateRecipe());
+        try {
+            rs = database.getAllRecipes(false);
+
+            while(rs.next()){
+
+                data.add(new Recipe(rs.getInt(1),rs.getString(2),rs.getString(3),new ArrayList<Ingredient>()));
+
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
         return data;
     }
 
@@ -55,13 +78,15 @@ public class RecipeActivity extends AppCompatActivity {
         return tempRec;
     }
 
-    private void generateViewData(Recipe data){
+    private void generateViewData(List<Recipe> data){
 
-        View view = super.getLayoutInflater().inflate(R.layout.small_item_template, null);
-        ((TextView)view.findViewById(R.id.drinkName)).setText(data.getName());
-        view.setId(data.getId());
-        view.setOnClickListener(favoriteListener);
-        ((LinearLayout)findViewById(R.id.favorites)).addView(view);
+        for(Recipe r:data){
+            View view = super.getLayoutInflater().inflate(R.layout.small_item_template, null);
+            ((TextView)view.findViewById(R.id.drinkName)).setText(r.getName());
+            view.setId(r.getId());
+            view.setOnClickListener(favoriteListener);
+            ((LinearLayout)findViewById(R.id.favorites)).addView(view);
+        }
     }
 
     private View.OnClickListener favoriteListener = new View.OnClickListener() {
@@ -72,6 +97,7 @@ public class RecipeActivity extends AppCompatActivity {
 
             Intent intent = new Intent(RecipeActivity.this,ShowRecipeActivity.class);
             intent.putExtra("Recipe",temp);
+            intent.putExtra("Database",database);
             startActivity(intent);
 
         }

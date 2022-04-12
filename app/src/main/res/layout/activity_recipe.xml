@@ -7,13 +7,17 @@
 
     tools:context=".RecipeActivity"
     android:orientation="vertical">
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/favorites">
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/favorites">
 
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
 
 </LinearLayout>

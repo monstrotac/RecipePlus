@@ -6,13 +6,14 @@ package uqac.dim.recipeplus.database;
     https://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database
  */
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DatabaseObject {
+public class DatabaseObject implements Serializable {
     //constant variables
     public static final String PASSWORD = "UQAC2022";
     public static final String USERNAME = "RECIPEPLUSROOT";
