@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DatabaseObject implements Serializable {
+public class DatabaseObject{
     //constant variables
     public static final String PASSWORD = "UQAC2022";
     public static final String USERNAME = "RECIPEPLUSROOT";

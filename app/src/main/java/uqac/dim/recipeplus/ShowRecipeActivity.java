@@ -23,7 +23,11 @@ public class ShowRecipeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drink_template);
-        database = (DatabaseObject) getIntent().getSerializableExtra("Database");
+        try {
+            database = new DatabaseObject();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setPageData((Recipe) getIntent().getSerializableExtra("Recipe"));
@@ -49,11 +53,16 @@ public class ShowRecipeActivity extends AppCompatActivity {
 
     private ArrayList<Ingredient> getIngredients(int id){
 
+
+        System.out.println(id);
+
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
         try {
-            ResultSet ing = database.getIngredientsAssociatedWithRecipe(id);
+            ResultSet ing = database.getRecipeIngredients(id);
 
             while (ing.next()){
+
+                System.out.println(ing.getInt(1));
                 ingredients.add(new Ingredient(ing.getInt(1),ing.getString(2),ing.getString(3),ing.getFloat(4)));
             }
 
@@ -61,6 +70,9 @@ public class ShowRecipeActivity extends AppCompatActivity {
             throwables.printStackTrace();
         }
 
+        System.out.println(ingredients);
+
         return ingredients;
+
     }
 }

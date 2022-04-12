@@ -53,7 +53,7 @@ public class RecipeActivity extends AppCompatActivity {
 
             while(rs.next()){
 
-                data.add(new Recipe(rs.getInt(1),rs.getString(2),rs.getString(3),new ArrayList<Ingredient>()));
+                data.add(new Recipe(rs.getInt(1),rs.getString(3),rs.getString(4),new ArrayList<Ingredient>()));
 
             }
         } catch (SQLException throwables) {
@@ -97,7 +97,6 @@ public class RecipeActivity extends AppCompatActivity {
 
             Intent intent = new Intent(RecipeActivity.this,ShowRecipeActivity.class);
             intent.putExtra("Recipe",temp);
-            intent.putExtra("Database",database);
             startActivity(intent);
 
         }
