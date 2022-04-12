@@ -27,19 +27,16 @@ public class DatabaseObject {
         Connection connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
         System.out.println("Database connected!");
         statement = activeConnection.createStatement();
-        Statement statement = connection.createStatement();
     }
     public DatabaseObject(String username, String password) throws SQLException {
         activeConnection = DriverManager.getConnection(DATABASE_URL, username, password);
         System.out.println("Database connected!");
         statement = activeConnection.createStatement();
-        Statement statement = activeConnection.createStatement();
     }
     public DatabaseObject(String url, String username, String password) throws SQLException {
         activeConnection = DriverManager.getConnection(url, username, password);
         System.out.println("Database connected!");
         statement = activeConnection.createStatement();
-        Statement statement = activeConnection.createStatement();
     }
     //Selects all recipes
     public ResultSet selectAllRecipes(boolean orderAscending) throws SQLException {
@@ -47,7 +44,13 @@ public class DatabaseObject {
             return statement.executeQuery("SELECT * FROM RECIPE ORDER BY id ASC");
         else return statement.executeQuery("SELECT * FROM RECIPE ORDER BY id DESC");
     }
-    
+    //Selects all existing ingredients in the database
+    public ResultSet selectAllIngredients() throws SQLException {
+        return statement.executeQuery("SELECT * FROM INGREDIENT ORDER BY id DESC");
+    }
+    //Selects all ingredients associated to the recipeid given
+
+
     public void Booga(){
         System.out.println("Connecting database...");
 
