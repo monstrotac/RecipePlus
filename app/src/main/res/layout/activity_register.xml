@@ -11,6 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center"
+        android:id="@+id/errorMessage">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:theme="@style/Theme.RecipePlus.loginText">
         <TextView
             android:layout_width="wrap_content"
@@ -41,28 +50,6 @@
 
         <EditText
             android:id="@+id/lastname"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content">
-
-        </EditText>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:theme="@style/Theme.RecipePlus.loginText">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/username">
-
-        </TextView>
-
-        <EditText
-            android:id="@+id/username"
             android:layout_width="300dp"
             android:layout_height="wrap_content">
 
