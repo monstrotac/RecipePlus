@@ -1,0 +1,15 @@
+insert into USER (firstName, lastName, password, email) values ('Tasia', 'Corkill', 'P7VAXMgMpJZy', 'tcorkill0@lulu.com');
+insert into USER (firstName, lastName, password, email) values ('Meade', 'Gargett', 'rMStVoi', 'mgargett1@a8.net');
+insert into USER (firstName, lastName, password, email) values ('Tobie', 'Danigel', 'dL0wJ2', 'tdanigel2@com.com');
+insert into USER (firstName, lastName, password, email) values ('Darsey', 'Dunton', '6p7YRdc', 'ddunton3@nba.com');
+insert into USER (firstName, lastName, password, email) values ('Erroll', 'Britnell', 'qmrb9P', 'ebritnell4@odnoklassniki.ru');
+insert into USER (firstName, lastName, password, email) values ('Moishe', 'Possa', 'AbNv1S0AL6', 'mpossa5@thetimes.co.uk');
+insert into USER (firstName, lastName, password, email) values ('Aldon', 'Puden', 'SLfRgQEhdTi', 'apuden6@vistaprint.com');
+insert into USER (firstName, lastName, password, email) values ('Jody', 'Thorius', 'T9TUqHg', 'jthorius7@washingtonpost.com');
+insert into USER (firstName, lastName, password, email) values ('Jaclyn', 'Braemer', 'XZZvLtdR', 'jbraemer8@sohu.com');
+insert into USER (firstName, lastName, password, email) values ('Maury', 'Carp', 'l23zpwOOX', 'mcarp9@mapy.cz');
+insert into USER (firstName, lastName, password, email) values ('Melanie', 'Munford', 'o5vvSnMs', 'mmunforda@sun.com');
+insert into USER (firstName, lastName, password, email) values ('Husein', 'O''Dee', 'GOWa6pLAM', 'hodeeb@themeforest.net');
+insert into USER (firstName, lastName, password, email) values ('Aarika', 'Timeby', 'I4YxXwzH', 'atimebyc@desdev.cn');
+insert into USER (firstName, lastName, password, email) values ('Ermengarde', 'Janes', 'o3vqJsP', 'ejanesd@cyberchimps.com');
+insert into USER (firstName, lastName, password, email) values ('Kathi', 'Rosenauer', 'ybS9qtULStH', 'krosenauere@oracle.com');
