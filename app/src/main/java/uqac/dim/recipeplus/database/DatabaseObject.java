@@ -80,7 +80,7 @@ public class DatabaseObject{
      */
     //Attempts to find the information given in the database and returns true if found. It then keeps the user in the DB.
     public Boolean attemptUserLogIn(String email, String password) throws SQLException {
-        ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = " + email + " AND password = " + password);
+        ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = \"" + email + "\" AND password = \"" + password + "\"");
         while (attempt.next()){
             if (attempt.getString(1) != null){
                 loggedInUser = attempt;
