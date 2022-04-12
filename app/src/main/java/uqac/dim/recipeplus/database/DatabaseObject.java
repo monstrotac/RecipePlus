@@ -69,7 +69,6 @@ public class DatabaseObject {
     public ResultSet getUserImage(int userId) throws SQLException {
         return statement.executeQuery("SELECT image FROM USER_IMAGE WHERE userId = " + userId);
     }
-    public ResultSet get
 
     public void Booga(){
         System.out.println("Connecting database...");
