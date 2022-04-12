@@ -39,18 +39,22 @@ public class DatabaseObject {
         statement = activeConnection.createStatement();
     }
     //Selects all recipes
-    public ResultSet selectAllRecipes(boolean orderAscending) throws SQLException {
+    public ResultSet getAllRecipes(boolean orderAscending) throws SQLException {
         if(orderAscending)
             return statement.executeQuery("SELECT * FROM RECIPE ORDER BY id ASC");
         else return statement.executeQuery("SELECT * FROM RECIPE ORDER BY id DESC");
     }
     //Selects all existing ingredients in the database
-    public ResultSet selectAllIngredients() throws SQLException {
+    public ResultSet getAllIngredients() throws SQLException {
         return statement.executeQuery("SELECT * FROM INGREDIENT ORDER BY id DESC");
     }
     //Selects all ingredients associated to the recipeid given
-    public ResultSet selectIngredientsAssociatedWithRecipe(int recipeid) throws SQLException {
+    public ResultSet getIngredientsAssociatedWithRecipe(int recipeid) throws SQLException {
         return statement.executeQuery("SELECT * FROM RECIPE_INGREDIENT WHERE recipeId = " + recipeid);
+    }
+    //Selects all user favourited recipes
+    public ResultSet getUserFavouriteRecipes(int userid) throws SQLException {
+        return statement.executeQuery("SELECT * FROM RECIPE_INGREDIENT WHERE recipeId = " + userid);
     }
 
     public void Booga(){
