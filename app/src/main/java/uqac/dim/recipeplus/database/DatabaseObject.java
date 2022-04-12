@@ -54,9 +54,13 @@ public class DatabaseObject implements Serializable {
     public ResultSet getAllIngredients() throws SQLException {
         return statement.executeQuery("SELECT * FROM INGREDIENT ORDER BY id DESC");
     }
-    //Selects all ingredients associated to the recipeid given
-    public ResultSet getIngredientsAssociatedWithRecipe(int recipeid) throws SQLException {
-        return statement.executeQuery("SELECT * FROM RECIPE_INGREDIENT WHERE recipeId = " + recipeid);
+    //Selects all ingredient association link associated to the recipeid given
+    public ResultSet getIngredientsAssociationWithRecipeId(int recipeId) throws SQLException {
+        return statement.executeQuery("SELECT * FROM RECIPE_INGREDIENT WHERE recipeId = " + recipeId);
+    }
+    //Selects all ingredients associated with result RECIPE_INGREDIENT select with given recipeID
+    public ResultSet getRecipeIngredients(int recipeId) throws SQLException {
+        return statement.executeQuery("SELECT ING.* FROM INGREDIENT ING LINK WHERE ING.id in (SELECT LINK.ingredientId FROM RECIPE_INGREDIENT WHERE LINK.id = "+recipeId+")");
     }
     //Selects all user favourited recipes corresponding to the ID of the user given.
     public ResultSet getUserFavouriteRecipes(int userid) throws SQLException {
