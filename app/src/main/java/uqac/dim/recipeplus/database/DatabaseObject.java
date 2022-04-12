@@ -89,6 +89,19 @@ public class DatabaseObject{
         }
         return false;
     }
+    //Attempts to register a new user into the database with the data provided.
+    public Boolean attemptUserRegister(String firstName, String lastName, String password, String email) throws SQLException {
+        //Checks if the user already exists.
+        ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = \"" + email + "\"");
+
+        while (attempt.next()){
+            if (attempt.getString(1) != null){
+                return false;
+            }
+        }
+        statement.executeQuery("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"');");
+        return true;
+    }
     //Logs out the user by returning the loggedInUser to null
     public void disconnectUser (){
         loggedInUser = null;
