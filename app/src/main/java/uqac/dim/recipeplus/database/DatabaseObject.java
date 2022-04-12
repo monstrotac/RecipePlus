@@ -24,7 +24,7 @@ public class DatabaseObject {
 
     //Constructors
     public DatabaseObject() throws SQLException {
-        Connection connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+        activeConnection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
         System.out.println("Database connected!");
         statement = activeConnection.createStatement();
     }
@@ -49,7 +49,9 @@ public class DatabaseObject {
         return statement.executeQuery("SELECT * FROM INGREDIENT ORDER BY id DESC");
     }
     //Selects all ingredients associated to the recipeid given
-
+    public ResultSet selectIngredientsAssociatedWithRecipe(int recipeid) throws SQLException {
+        return statement.executeQuery("SELECT * FROM RECIPE_INGREDIENT WHERE recipeId = " + recipeid);
+    }
 
     public void Booga(){
         System.out.println("Connecting database...");
