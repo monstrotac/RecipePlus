@@ -38,6 +38,11 @@ public class DatabaseObject {
         System.out.println("Database connected!");
         statement = activeConnection.createStatement();
     }
+
+    /*
+    This sections is dedicated to all of the select requests, most of them are used to render data on the front-end side.
+     */
+
     //Selects all recipes
     public ResultSet getAllRecipes(boolean orderAscending) throws SQLException {
         if(orderAscending)
@@ -52,10 +57,19 @@ public class DatabaseObject {
     public ResultSet getIngredientsAssociatedWithRecipe(int recipeid) throws SQLException {
         return statement.executeQuery("SELECT * FROM RECIPE_INGREDIENT WHERE recipeId = " + recipeid);
     }
-    //Selects all user favourited recipes
+    //Selects all user favourited recipes corresponding to the ID of the user given.
     public ResultSet getUserFavouriteRecipes(int userid) throws SQLException {
-        return statement.executeQuery("SELECT * FROM RECIPE_INGREDIENT WHERE recipeId = " + userid);
+        return statement.executeQuery("SELECT * FROM USER_FAVORITE WHERE userId = " + userid);
     }
+    //Selects the thumbnail of the recipe corresponding to the supplied ID.
+    public ResultSet getRecipeThumbnail(int recipeId) throws SQLException {
+        return statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId);
+    }
+    //Selects the image of the user corresponding to the supplied ID
+    public ResultSet getUserImage(int userId) throws SQLException {
+        return statement.executeQuery("SELECT image FROM USER_IMAGE WHERE userId = " + userId);
+    }
+    public ResultSet get
 
     public void Booga(){
         System.out.println("Connecting database...");
