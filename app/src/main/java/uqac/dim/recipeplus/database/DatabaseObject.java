@@ -8,23 +8,72 @@ package uqac.dim.recipeplus.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DatabaseObject {
+    //constant variables
+    public static final String PASSWORD = "UQAC2022";
+    public static final String USERNAME = "RECIPEPLUSROOT";
+    public static final String DATABASE_URL = "jdbc:mysql://192.168.0.17:3306/recipePlusDatabase";
+    //private variables
+    private Connection activeConnection;
+    private Statement statement;
+    //public variables
 
-    //The forName() method of Class class is used to register the driver class. This method is used to dynamically load the driver class.
-    public static void forName(String className) throws ClassNotFoundException {
-        //Here, Java program is loading oracle driver to establish database connection.
-        Class.forName("oracle.jdbc.driver.OracleDriver");
+    //Constructors
+    public DatabaseObject() throws SQLException {
+        Connection connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+        System.out.println("Database connected!");
+        statement = activeConnection.createStatement();
+        Statement statement = connection.createStatement();
+    }
+    public DatabaseObject(String username, String password) throws SQLException {
+        activeConnection = DriverManager.getConnection(DATABASE_URL, username, password);
+        System.out.println("Database connected!");
+        statement = activeConnection.createStatement();
+        Statement statement = activeConnection.createStatement();
+    }
+    public DatabaseObject(String url, String username, String password) throws SQLException {
+        activeConnection = DriverManager.getConnection(url, username, password);
+        System.out.println("Database connected!");
+        statement = activeConnection.createStatement();
+        Statement statement = activeConnection.createStatement();
+    }
+    //Selects all recipes
+    public ResultSet selectAllRecipes(boolean orderAscending) throws SQLException {
+        if(orderAscending)
+            return statement.executeQuery("SELECT * FROM RECIPE ORDER BY id ASC");
+        else return statement.executeQuery("SELECT * FROM RECIPE ORDER BY id DESC");
+    }
+    
+    public void Booga(){
+        System.out.println("Connecting database...");
+
+        System.out.println("Loading driver...");
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            System.out.println("Driver loaded!");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Cannot find the driver in the classpath!", e);
+        }
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://192.168.0.17:3306/recipePlusDatabase", "RECIPEPLUSROOT", "UQAC2022")) {
+            System.out.println("Database connected!");
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("Select * from RECIPE");
+            while(rs.next()){
+                System.out.println(rs.getInt(1));
+                System.out.println(rs.getString(2));
+                System.out.println(rs.getString(3));
+                System.out.println(rs.getString(4));
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Cannot connect the database!", e);
+        }
     }
 
-    //The getConnection() method of DriverManager class is used to establish connection with the database.
-    public static Connection getConnection(String username, String password)throws SQLException{
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/recipePlusDatabase",username,password);
-    }
-    public static Connection getConnection(String url, String username, String password) throws SQLException
-    {
-        return DriverManager.getConnection(url,username,password);
-    }
 
 }

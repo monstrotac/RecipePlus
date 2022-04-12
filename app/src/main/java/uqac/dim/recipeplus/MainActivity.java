@@ -25,30 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        System.out.println("Connecting database...");
 
-        System.out.println("Loading driver...");
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("Driver loaded!");
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Cannot find the driver in the classpath!", e);
-        }
-
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://192.168.0.17:3306/recipePlusDatabase", "RECIPEPLUSROOT", "UQAC2022")) {
-            System.out.println("Database connected!");
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("Select * from RECIPE");
-            while(rs.next()){
-                System.out.println(rs.getInt(1));
-                System.out.println(rs.getString(2));
-                System.out.println(rs.getString(3));
-                System.out.println(rs.getString(4));
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
-        }
     }
 
     public void LoginPage(View v){
