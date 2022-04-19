@@ -1,6 +1,8 @@
 package uqac.dim.recipeplus;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private int id;
     private String firstname;
     private String lastname;

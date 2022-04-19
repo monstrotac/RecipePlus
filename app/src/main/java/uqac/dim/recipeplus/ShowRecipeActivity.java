@@ -18,6 +18,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
     //Gestion Image: Picasso / Glide
 
     private DatabaseObject database;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class ShowRecipeActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setPageData((Recipe) getIntent().getSerializableExtra("Recipe"));
+        user = (User) getIntent().getSerializableExtra("User");
     }
 
     private void setPageData (Recipe r){

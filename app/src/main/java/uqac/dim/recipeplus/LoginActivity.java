@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             if(database.attemptUserLogIn(email,password)){
                 Intent intent = new Intent(this, RecipeActivity.class);
+                intent.putExtra("User",database.getLoggedInUserObject());
                 startActivity(intent);
             }
             else{

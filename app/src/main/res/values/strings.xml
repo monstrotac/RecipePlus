@@ -14,4 +14,7 @@
     <string name="images"><i><u>Images :</u></i></string>
     <string name="bad_login">Bad Credentials</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 </resources>

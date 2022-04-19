@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,7 +15,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,13 +29,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 import uqac.dim.recipeplus.database.DatabaseObject;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private List<Recipe> recipes = new ArrayList<Recipe>();
     private DatabaseObject database;
-
+    private User user;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +52,45 @@ public class RecipeActivity extends AppCompatActivity {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        user = (User) getIntent().getSerializableExtra("User");
+
+        drawerLayout = findViewById(R.id.nav_drawer);
+        navigationView = findViewById(R.id.nav_view);
+        toolbar = findViewById(R.id.nav_toolbar);
+
+        navigationView.bringToFront();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+        Intent intent;
+        switch (menuItem.getItemId()){
+
+            case R.id.nav_recipe:
+                intent = new Intent(RecipeActivity.this,RecipeActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
+                break;
+            case R.id.nav_myrecipe:
+                break;
+            case R.id.nav_addrecipe:
+                break;
+            case R.id.nav_profile:
+                break;
+            case R.id.nav_logout:
+                intent = new Intent(RecipeActivity.this,MainActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+        return  true;
     }
 
     private List<Recipe> loadRecipes(){
