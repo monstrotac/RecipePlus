@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class DatabaseObject{
     //constant variables
@@ -75,12 +76,32 @@ public class DatabaseObject{
     public ResultSet getUserImage(int userId) throws SQLException {
         return statement.executeQuery("SELECT image FROM USER_IMAGE WHERE userId = " + userId);
     }
+    //Selects and returns all recipes created by selected user
+    public ResultSet getUserRecipes(int userId) throws SQLException {
+        return statement.executeQuery("SELECT * FROM RECIPE WHERE creatorId = " + userId);
+    }
+    //Selects and returns all of the current logged in user's recipes
+    public ResultSet getLoggedInUsersRecipes() throws SQLException {
+        return statement.executeQuery("SELECT * FROM RECIPE WHERE creatorId = " + loggedInUser.getInt(1));
+    }
+    /*
+    This section is dedicated to all INSERT, UPDATE and DELETES.
+    MOST OF THESE FUNCTIONS RETURN A BOOL CORRESPONDING TO IF THE OPERATION WAS A SUCCESS OR NOT.
+     */
+    //Adds a new recipe and links images to it, the creatorId will be the user who is logged in.
+    public Boolean addNewRecipeFromLoggedInUser(String recipeName, String recipeDescription, String instruction, Byte[] recipeThumbnail, List<Byte[]> recipePictures) throws SQLException {
+        int newRecipeId = statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ('"+loggedInUser.getInt(1)+"', '"+recipeName+"', '"+recipeDescription+"', '"+instruction+"');");
+        if(newRecipeId == 0) //If the INSERT failed, we will end up with a 0. Therefore we return false.
+            return false;
+        statement.executeUpdate("INSERT ");
+        return true;
+    }
     /*
     This section is dedicated to all of the user's connection activity.
      */
     //Attempts to find the information given in the database and returns true if found. It then keeps the user in the DB.
     public Boolean attemptUserLogIn(String email, String password) throws SQLException {
-        ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = \"" + email + "\" AND password = \"" + password + "\"");
+        ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName, email FROM USER WHERE email = \"" + email + "\" AND password = \"" + password + "\"");
         while (attempt.next()){
             if (attempt.getString(1) != null){
                 loggedInUser = attempt;
@@ -100,7 +121,8 @@ public class DatabaseObject{
                 }
             }
             //Creates the user and returns true to notice that the user creation was a success.
-            statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"');");
+            int o = statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"');");
+            System.out.println("USER ID: " + o);
             return true;
         } else {
             return false;
