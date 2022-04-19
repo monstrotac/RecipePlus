@@ -6,13 +6,14 @@ package uqac.dim.recipeplus.database;
     https://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database
  */
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
+import uqac.dim.recipeplus.User;
 
 public class DatabaseObject{
     //constant variables
@@ -22,7 +23,8 @@ public class DatabaseObject{
     //private variables
     private Connection activeConnection;
     private Statement statement;
-    private ResultSet loggedInUser;
+    private ResultSet activeUserResultSet;
+    private User loggedInUserObject;
     //public variables
 
     //Constructors
@@ -82,34 +84,61 @@ public class DatabaseObject{
     }
     //Selects and returns all of the current logged in user's recipes
     public ResultSet getLoggedInUsersRecipes() throws SQLException {
-        return statement.executeQuery("SELECT * FROM RECIPE WHERE creatorId = " + loggedInUser.getInt(1));
+        return statement.executeQuery("SELECT * FROM RECIPE WHERE creatorId = " + activeUserResultSet.getInt(1));
     }
+
     /*
     This section is dedicated to all INSERT, UPDATE and DELETES.
     MOST OF THESE FUNCTIONS RETURN A BOOL CORRESPONDING TO IF THE OPERATION WAS A SUCCESS OR NOT.
      */
+
     //Adds a new recipe and links images to it, the creatorId will be the user who is logged in.
     public Boolean addNewRecipeFromLoggedInUser(String recipeName, String recipeDescription, String instruction, Byte[] recipeThumbnail, List<Byte[]> recipePictures) throws SQLException {
-        int newRecipeId = statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ('"+loggedInUser.getInt(1)+"', '"+recipeName+"', '"+recipeDescription+"', '"+instruction+"');");
-        if(newRecipeId == 0) //If the INSERT failed, we will end up with a 0. Therefore we return false.
-            return false;
-        statement.executeUpdate("INSERT ");
+        String[] generatedColumns = {"id"};
+        statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ('"+ activeUserResultSet.getInt(1)+"', '"+recipeName+"', '"+recipeDescription+"', '"+instruction+"');", generatedColumns);
+        int newRecipeId;
+        ResultSet rs = statement.getGeneratedKeys(); //We acquire data
+        if (rs.next())
+            newRecipeId = rs.getInt(1); //With the help of a little Geomancy, we acquire the ID from the newest recipe.
+        else
+            return false;//If the INSERT failed, we will end up with nothing. Therefore we return false.
+        //We insert the thumbnail data into the database.
+        statement.executeUpdate("INSERT INTO RECIPE_THUMBNAIL (recipeId, image) values ("+ newRecipeId +", '"+recipeThumbnail+"')");
+        //We insert all of the pictures inside the list provided in the paramas inside of the database.
+        for (Byte[] picture:recipePictures) {
+            statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+picture+"')");
+        }
+        return true;
+    }
+
+    //Delete the recipe with Id.
+    public Boolean deleteRecipeWithId(int recipeId) throws SQLException {
+        ResultSet review = statement.executeQuery("SELECT creatorId FROM RECIPE WHERE id = " + recipeId);
+        if(review.next()){
+            if(review.getInt(1) != activeUserResultSet.getInt(1))
+                return false; //If the creator doesn't correspond to the one of the Recipe cancel everything.
+        } else
+            return false; //If we end up here it means the Database didn't find the recipe to delete.
+        statement.executeUpdate("DELETE FROM");
         return true;
     }
     /*
     This section is dedicated to all of the user's connection activity.
      */
+
     //Attempts to find the information given in the database and returns true if found. It then keeps the user in the DB.
     public Boolean attemptUserLogIn(String email, String password) throws SQLException {
         ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName, email FROM USER WHERE email = \"" + email + "\" AND password = \"" + password + "\"");
         while (attempt.next()){
             if (attempt.getString(1) != null){
-                loggedInUser = attempt;
+                activeUserResultSet = attempt;
+                assembleUserObject();
                 return true;
             }
         }
         return false;
     }
+
     //Attempts to register a new user into the database with the data provided.
     public Boolean attemptUserRegister(String firstName, String lastName, String password, String email) throws SQLException {
         //Checks if the user already exists if it does, return false and prevent user creation.
@@ -122,18 +151,27 @@ public class DatabaseObject{
             }
             //Creates the user and returns true to notice that the user creation was a success.
             int o = statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"');");
-            System.out.println("USER ID: " + o);
             return true;
         } else {
             return false;
         }
     }
+    
+    private void assembleUserObject() throws SQLException {
+        loggedInUserObject = new User(activeUserResultSet.getInt(1), activeUserResultSet.getString(2), activeUserResultSet.getString(3), activeUserResultSet.getString(4));
+    }
+
     //Logs out the user by returning the loggedInUser to null
     public void disconnectUser (){
-        loggedInUser = null;
+        activeUserResultSet = null;
+        loggedInUserObject = null;
     }
+
     //Simple getter that returns the user and its informations.
-    public ResultSet getLoggedInUser() {
-        return loggedInUser;
+    public ResultSet getActiveUserResultSet() {
+        return activeUserResultSet;
+    }
+    public User getLoggedInUserObject() {
+        return loggedInUserObject;
     }
 }
