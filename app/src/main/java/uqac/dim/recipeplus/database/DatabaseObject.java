@@ -92,15 +92,19 @@ public class DatabaseObject{
     //Attempts to register a new user into the database with the data provided.
     public Boolean attemptUserRegister(String firstName, String lastName, String password, String email) throws SQLException {
         //Checks if the user already exists if it does, return false and prevent user creation.
-        ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = \"" + email + "\"");
-        while (attempt.next()){
-            if (attempt.getString(1) != null){
-                return false;
+        if(!firstName.contentEquals("") && !lastName.contentEquals("") && !password.contentEquals("") && !email.contentEquals("")){
+            ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = \"" + email + "\"");
+            while (attempt.next()){
+                if (attempt.getString(1) != null){
+                    return false;
+                }
             }
+            //Creates the user and returns true to notice that the user creation was a success.
+            statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"');");
+            return true;
+        } else {
+            return false;
         }
-        //Creates the user and returns true to notice that the user creation was a success.
-        statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"');");
-        return true;
     }
     //Logs out the user by returning the loggedInUser to null
     public void disconnectUser (){

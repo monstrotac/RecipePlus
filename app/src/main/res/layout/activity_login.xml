@@ -59,8 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:onClick="Login"
-        android:text="@string/login">
-    </Button>
+        android:text="@string/login"></Button>
 
 
 </LinearLayout>
