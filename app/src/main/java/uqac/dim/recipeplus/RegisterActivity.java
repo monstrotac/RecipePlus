@@ -45,10 +45,10 @@ public class RegisterActivity extends AppCompatActivity {
         temp = (EditText)findViewById(R.id.lastname);
         String lastname = temp.getText().toString();
 
-        if(email != "" && password != "" && firstname != "" && lastname != ""){
+        if(!email.equals("") && !password.equals("") && !firstname.equals("") && !lastname.equals("")){
             try {
                 if(database.attemptUserRegister(firstname,lastname,password,email)){
-                    Intent intent = new Intent(this, RecipeActivity.class);
+                    Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                 }
             } catch (SQLException throwables) {
@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else{
             View view = super.getLayoutInflater().inflate(R.layout.error_message_template, null);
-            ((TextView)view.findViewById(R.id.errorText)).setText("All field need to be filled");
+            ((TextView)view.findViewById(R.id.errorText)).setText("All fields need to be filled");
             ((LinearLayout)findViewById(R.id.errorMessage)).addView(view);
         }
 
