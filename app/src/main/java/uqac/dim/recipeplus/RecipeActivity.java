@@ -108,9 +108,8 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
             rs = database.getAllRecipes(false);
 
             while(rs.next()){
-                int id = (int)rs.getInt(1);
 
-                data.add(new Recipe(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5),new ArrayList<Ingredient>(),database.getRecipeThumbnail(id)));
+                data.add(new Recipe(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5),new ArrayList<Ingredient>()));
 
             }
         } catch (SQLException throwables) {
