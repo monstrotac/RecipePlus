@@ -3,6 +3,8 @@ package uqac.dim.recipeplus;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -81,8 +83,14 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
             case R.id.nav_myrecipe:
                 break;
             case R.id.nav_addrecipe:
+                intent = new Intent(RecipeActivity.this,AddRecipeActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
                 break;
             case R.id.nav_profile:
+                intent = new Intent(RecipeActivity.this,ProfileActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
                 break;
             case R.id.nav_logout:
                 intent = new Intent(RecipeActivity.this,MainActivity.class);
@@ -100,8 +108,9 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
             rs = database.getAllRecipes(false);
 
             while(rs.next()){
+                int id = (int)rs.getInt(1);
 
-                data.add(new Recipe(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5),new ArrayList<Ingredient>()));
+                data.add(new Recipe(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5),new ArrayList<Ingredient>(),database.getRecipeThumbnail(id)));
 
             }
         } catch (SQLException throwables) {
@@ -121,7 +130,16 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
             view.setId(r.getId());
             view.setOnClickListener(favoriteListener);
             ((LinearLayout)findViewById(R.id.favorites)).addView(view);
+
+            ((ImageView)findViewById(R.id.drinkImage)).setImageBitmap(getBitmapFromBytes(r.getImage()));
         }
+    }
+
+    private Bitmap getBitmapFromBytes(byte[] bytes) {
+        if (bytes != null) {
+            return BitmapFactory.decodeByteArray(bytes, 0 ,bytes.length);
+        }
+        return null;
     }
 
     private View.OnClickListener favoriteListener = new View.OnClickListener() {

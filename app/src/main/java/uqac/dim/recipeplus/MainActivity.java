@@ -38,9 +38,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
-
-    public  void ContinueGuest(View v){
-        Intent intent = new Intent(this, RecipeActivity.class);
-        startActivity(intent);
-    }
 }

@@ -11,10 +11,23 @@
     <string name="ingredients"><i><u>Ingredients :</u></i></string>
     <string name="descript"><i><u>Description :</u></i></string>
     <string name="recipe"><i><u>Instructions :</u></i></string>
+    <string name="recipe_name">Recipe Name :</string>
+    <string name="recipe_desc">Description :</string>
+    <string name="recipe_inst">Instructions :</string>
+    <string name="recipe_save">Save Recipe</string>
+
     <string name="images"><i><u>Images :</u></i></string>
     <string name="bad_login">Bad Credentials</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="profile_email">Email :</string>
+    <string name="profile_name">Name :</string>
+    <string name="add_image">Change Recipe Image</string>
+    <string name="add_data">Recipe Data</string>
+
+
+
 
 </resources>

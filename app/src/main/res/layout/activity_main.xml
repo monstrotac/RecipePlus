@@ -41,11 +41,6 @@
                 android:onClick="RegisterPage"
                 android:text="@string/register"></Button>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:onClick="ContinueGuest"
-                android:text="@string/noLogin"></Button>
         </LinearLayout>
     </ScrollView>
 
