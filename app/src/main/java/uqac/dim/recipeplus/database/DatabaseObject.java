@@ -24,9 +24,9 @@ import uqac.dim.recipeplus.User;
 
 public class DatabaseObject{
     //constant variables
-    public static final String PASSWORD = "UQAC2022";
-    public static final String USERNAME = "RECIPEPLUSROOT";
-    public static final String DATABASE_URL = "jdbc:mysql://192.168.0.17:3306/recipePlusDatabase";
+    protected static final String PASSWORD = "UQAC2022";
+    protected static final String USERNAME = "RECIPEPLUSROOT";
+    protected static final String DATABASE_URL = "jdbc:mysql://192.168.0.17:3306/recipePlusDatabase";
     //private variables
     private Connection activeConnection;
     private Statement statement;
@@ -120,14 +120,12 @@ public class DatabaseObject{
         thumbnailStatement.setInt(1, newRecipeId);
         thumbnailStatement.setBytes(2, recipeThumbnail);
         thumbnailStatement.executeUpdate();
-        thumbnailStatement.close();
         //We insert all of the pictures inside the list provided in the params inside of the database.
         for (byte[] picture:recipePictures) {
             PreparedStatement pictureStatement = activeConnection.prepareStatement("INSERT INTO RECIPE_IMAGE (recipeId, image) VALUES(?,?)");
             pictureStatement.setInt(1, newRecipeId);
             pictureStatement.setBytes(2, recipeThumbnail);
             pictureStatement.executeUpdate();
-            pictureStatement.close();
         }
         //We insert all of the ingredient associated with the recipe.
         for (Ingredient ingredient: recipe.getIngredients() ) {
