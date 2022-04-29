@@ -7,6 +7,7 @@ package uqac.dim.recipeplus.database;
  */
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -74,8 +75,9 @@ public class DatabaseObject{
         return statement.executeQuery("SELECT * FROM USER_FAVORITE WHERE userId = " + userid);
     }
     //Selects the thumbnail of the recipe corresponding to the supplied ID.
-    public ResultSet getRecipeThumbnail(int recipeId) throws SQLException {
-        return statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId);
+    public ByteArrayInputStream getRecipeThumbnail(int recipeId) throws SQLException {
+        ByteArrayInputStream o = (ByteArrayInputStream) statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId).getBlob(1);
+        return o;
     }
     //Selects the image of the user corresponding to the supplied ID
     public ResultSet getUserImage(int userId) throws SQLException {
@@ -107,10 +109,11 @@ public class DatabaseObject{
             return false;//If the INSERT failed, we will end up with nothing. Therefore we return false.
         //We insert the thumbnail data into the database.
         ByteArrayInputStream thumbnailInput = new ByteArrayInputStream(recipeThumbnail);
-        statement.executeUpdate("INSERT INTO RECIPE_THUMBNAIL (recipeId, image) values ("+ newRecipeId +", '"+recipeThumbnail+"')");
+        statement.executeUpdate("INSERT INTO RECIPE_THUMBNAIL (recipeId, image) values ("+ newRecipeId +", '"+thumbnailInput+"')");
         //We insert all of the pictures inside the list provided in the paramas inside of the database.
         for (byte[] picture:recipePictures) {
-            statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+picture+"')");
+            ByteArrayInputStream pictureInput = new ByteArrayInputStream(picture);
+            statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+pictureInput+"')");
         }
         //We insert all of the ingredient associated with the recipe.
         for (Ingredient ingredient: ingredientList ) {
