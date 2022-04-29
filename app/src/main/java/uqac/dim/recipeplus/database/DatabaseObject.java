@@ -10,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -72,10 +73,6 @@ public class DatabaseObject{
     public ResultSet getRecipeIngredients(int recipeId) throws SQLException {
         return statement.executeQuery("SELECT ING.* FROM INGREDIENT ING WHERE ING.id in (SELECT LINK.ingredientId FROM RECIPE_INGREDIENT LINK WHERE LINK.recipeId = "+recipeId+")");
     }
-    //Selects all user favourite recipes corresponding to the ID of the user given.
-    public ResultSet getUserFavouriteRecipes(int userid) throws SQLException {
-        return statement.executeQuery("SELECT * FROM USER_FAVORITE WHERE userId = " + userid);
-    }
     //Selects the thumbnail of the recipe corresponding to the supplied ID.
     public byte[] getRecipeThumbnail(int recipeId) throws SQLException {
         ResultSet rs = statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId);
@@ -109,7 +106,7 @@ public class DatabaseObject{
      */
 
     //Adds a new recipe and links images to it, the creatorId will be the user who is logged in.
-    public Boolean addNewRecipeFromLoggedInUser(Recipe recipe, byte[] recipeThumbnail, List<byte[]> recipePictures, List<Ingredient> ingredientList) throws SQLException {
+    public Boolean addNewRecipeFromLoggedInUser(Recipe recipe, byte[] recipeThumbnail, List<byte[]> recipePictures) throws SQLException {
         String[] generatedColumns = {"id"};
         statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ('"+ activeUserResultSet.getInt(1)+"', '"+recipe.getName()+"', '"+recipe.getDesc()+"', '"+recipe.getInstruc()+"');", generatedColumns);
         int newRecipeId;
@@ -118,14 +115,22 @@ public class DatabaseObject{
             newRecipeId = rs.getInt(1); //With the help of a little Geomancy, we acquire the ID from the newest recipe.
         else
             return false;//If the INSERT failed, we will end up with nothing. Therefore we return false.
-        //We insert the thumbnail data into the database.
-        statement.executeUpdate("INSERT INTO RECIPE_THUMBNAIL (recipeId, image) values ("+ newRecipeId +", '"+ Arrays.toString(recipeThumbnail) +"')");
-        //We insert all of the pictures inside the list provided in the paramas inside of the database.
+        //We insert the thumbnail data into the database, but first we prepare the data.
+        PreparedStatement thumbnailStatement = activeConnection.prepareStatement("INSERT INTO RECIPE_THUMBNAIL (recipeId, image) VALUES(?,?)");
+        thumbnailStatement.setInt(1, newRecipeId);
+        thumbnailStatement.setBytes(2, recipeThumbnail);
+        thumbnailStatement.executeUpdate();
+        thumbnailStatement.close();
+        //We insert all of the pictures inside the list provided in the params inside of the database.
         for (byte[] picture:recipePictures) {
-            statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+ Arrays.toString(picture) +"')");
+            PreparedStatement pictureStatement = activeConnection.prepareStatement("INSERT INTO RECIPE_IMAGE (recipeId, image) VALUES(?,?)");
+            pictureStatement.setInt(1, newRecipeId);
+            pictureStatement.setBytes(2, recipeThumbnail);
+            pictureStatement.executeUpdate();
+            pictureStatement.close();
         }
         //We insert all of the ingredient associated with the recipe.
-        for (Ingredient ingredient: ingredientList ) {
+        for (Ingredient ingredient: recipe.getIngredients() ) {
             statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ newRecipeId);
         }
         return true;
@@ -225,5 +230,17 @@ public class DatabaseObject{
     }
     public User getLoggedInUserObject() {
         return loggedInUserObject;
+    }
+
+    //These functions are used for debugging purpose and I do not recommend using them.
+    private void annihilateRecipes() throws SQLException {
+        statement.executeUpdate("DELETE FROM RECIPE_IMAGE");
+        statement.executeUpdate("DELETE FROM RECIPE_THUMBNAIL");
+        statement.executeUpdate("DELETE FROM RECIPE_INGREDIENT");
+        statement.executeUpdate("DELETE FROM RECIPE");
+    }
+    private void annihilateUsers() throws SQLException {
+        statement.executeUpdate("DELETE FROM USER_IMAGE");
+        statement.executeUpdate("DELETE FROM USER");
     }
 }
