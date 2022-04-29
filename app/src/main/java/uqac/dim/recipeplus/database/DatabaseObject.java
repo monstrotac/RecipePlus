@@ -97,7 +97,7 @@ public class DatabaseObject{
     }
     //Selects and returns all of the current logged in user's recipes
     public ResultSet getLoggedInUsersRecipes() throws SQLException {
-        return statement.executeQuery("SELECT * FROM RECIPE WHERE creatorId = " + activeUserResultSet.getInt(1));
+        return statement.executeQuery("SELECT * FROM RECIPE WHERE creatorId = " + loggedInUserObject.getId());
     }
 
     /*
@@ -108,7 +108,7 @@ public class DatabaseObject{
     //Adds a new recipe and links images to it, the creatorId will be the user who is logged in.
     public Boolean addNewRecipeFromLoggedInUser(Recipe recipe, byte[] recipeThumbnail, List<byte[]> recipePictures) throws SQLException {
         String[] generatedColumns = {"id"};
-        statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ('"+ activeUserResultSet.getInt(1)+"', '"+recipe.getName()+"', '"+recipe.getDesc()+"', '"+recipe.getInstruc()+"');", generatedColumns);
+        statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ("+loggedInUserObject.getId()+", '"+recipe.getName()+"', '"+recipe.getDesc()+"', '"+recipe.getInstruc()+"')", generatedColumns);
         int newRecipeId;
         ResultSet rs = statement.getGeneratedKeys(); //We acquire data
         if (rs.next())
@@ -138,7 +138,7 @@ public class DatabaseObject{
         //First of all, we make sure that the creator of the recipe is in fact the user we are authenticated as.
         ResultSet review = statement.executeQuery("SELECT creatorId FROM RECIPE WHERE id = " + recipe.getId());
         if(review.next()){
-            if(review.getInt(1) != activeUserResultSet.getInt(1))
+            if(review.getInt(1) != loggedInUserObject.getId())
                 return false; //If the creator doesn't correspond to the one of the Recipe cancel everything.
         } else
             return false; //If we end up here it means the Database didn't find the recipe
@@ -164,7 +164,7 @@ public class DatabaseObject{
     public Boolean deleteRecipeWithId(int recipeId) throws SQLException {
         ResultSet review = statement.executeQuery("SELECT creatorId FROM RECIPE WHERE id = " + recipeId);
         if(review.next()){
-            if(review.getInt(1) != activeUserResultSet.getInt(1))
+            if(review.getInt(1) != loggedInUserObject.getId())
                 return false; //If the creator doesn't correspond to the one of the Recipe cancel everything.
         } else
             return false; //If we end up here it means the Database didn't find the recipe to delete.
@@ -205,7 +205,7 @@ public class DatabaseObject{
                 }
             }
             //Creates the user and returns true to notice that the user creation was a success.
-            int o = statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"');");
+            int o = statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"')");
             return true;
         } else {
             return false;
@@ -229,7 +229,9 @@ public class DatabaseObject{
     public User getLoggedInUserObject() {
         return loggedInUserObject;
     }
-
+    public void setUser(User user){
+        loggedInUserObject = user;
+    }
     //These functions are used for debugging purpose and I do not recommend using them.
     private void annihilateRecipes() throws SQLException {
         statement.executeUpdate("DELETE FROM RECIPE_IMAGE");
