@@ -64,7 +64,7 @@ public class AddRecipeActivity  extends AppCompatActivity {
         }
     }
 
-    public void saveRecipe(View view) throws SQLException {
+    public void saveRecipe(View view){
         EditText temp = (EditText)findViewById(R.id.recipeName);
         String name = temp.getText().toString();
 
@@ -88,7 +88,7 @@ public class AddRecipeActivity  extends AppCompatActivity {
         }
 
 
-        Recipe data = new Recipe(name, desc, inst, new ArrayList<Ingredient>(),bytesData);
+        Recipe data = new Recipe(name, desc, inst, new ArrayList<Ingredient>());
         database.addNewRecipeFromLoggedInUser(data,bytesData,new ArrayList<byte[]>());
     }
 }

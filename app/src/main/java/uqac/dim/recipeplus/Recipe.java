@@ -10,24 +10,21 @@ public class Recipe implements Serializable {
     private String desc;
     private String instruc;
     private List<Ingredient> ingredients;
-    private byte[] image;
 
-    public Recipe(int id,int creatorId,String name,String desc,String instruc,List<Ingredient> ingredients,byte[] image){
+    public Recipe(int id,int creatorId,String name,String desc,String instruc,List<Ingredient> ingredients){
         this.id = id;
         this.creatorId = creatorId;
         this.name = name;
         this.desc = desc;
         this.instruc = instruc;
         this.ingredients = ingredients;
-        this.image = image;
     }
 
-    public Recipe(String name,String desc,String instruc,List<Ingredient> ingredients,byte[] image){
+    public Recipe(String name,String desc,String instruc,List<Ingredient> ingredients){
         this.name = name;
         this.desc = desc;
         this.instruc = instruc;
         this.ingredients = ingredients;
-        this.image = image;
     }
 
     public int getId() {
@@ -78,11 +75,4 @@ public class Recipe implements Serializable {
         this.instruc = instruc;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
 }
