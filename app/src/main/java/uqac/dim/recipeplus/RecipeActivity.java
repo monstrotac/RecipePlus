@@ -56,6 +56,7 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
         }
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         user = (User) getIntent().getSerializableExtra("User");
+        database.setUser(user);
 
         drawerLayout = findViewById(R.id.nav_drawer);
         navigationView = findViewById(R.id.nav_view);
@@ -130,7 +131,11 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
             view.setOnClickListener(favoriteListener);
             ((LinearLayout)findViewById(R.id.favorites)).addView(view);
 
-            //((ImageView)findViewById(R.id.drinkImage)).setImageBitmap(getBitmapFromBytes(r.getImage()));
+            try {
+                ((ImageView)findViewById(R.id.drinkImage)).setImageBitmap(getBitmapFromBytes(database.getRecipeThumbnail(r.getId())));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 

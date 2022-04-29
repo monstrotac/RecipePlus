@@ -25,6 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
             throwables.printStackTrace();
         }
         user = (User) getIntent().getSerializableExtra("User");
+        database.setUser(user);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loadData(user);
     }

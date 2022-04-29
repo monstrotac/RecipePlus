@@ -35,6 +35,7 @@ public class AddRecipeActivity  extends AppCompatActivity {
             throwables.printStackTrace();
         }
         user = (User) getIntent().getSerializableExtra("User");
+        database.setUser(user);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -64,7 +65,7 @@ public class AddRecipeActivity  extends AppCompatActivity {
         }
     }
 
-    public void saveRecipe(View view){
+    public void saveRecipe(View view) throws IOException {
         EditText temp = (EditText)findViewById(R.id.recipeName);
         String name = temp.getText().toString();
 
@@ -81,11 +82,7 @@ public class AddRecipeActivity  extends AppCompatActivity {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] bytesData = stream.toByteArray();
-        try {
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        stream.close();
 
 
         Recipe data = new Recipe(name, desc, inst, new ArrayList<Ingredient>());
@@ -94,5 +91,9 @@ public class AddRecipeActivity  extends AppCompatActivity {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
+        Intent intent = new Intent(AddRecipeActivity.this, RecipeActivity.class);
+        intent.putExtra("User",user);
+        startActivity(intent);
     }
 }
