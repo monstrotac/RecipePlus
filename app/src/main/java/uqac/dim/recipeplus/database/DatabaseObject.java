@@ -76,7 +76,9 @@ public class DatabaseObject{
     //Selects the thumbnail of the recipe corresponding to the supplied ID.
     public byte[] getRecipeThumbnail(int recipeId) throws SQLException {
         ResultSet rs = statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId);
-        return rs.getBytes(1);
+        if(rs.next())
+            return rs.getBytes(1);
+        else return null;
     }
     //Selects all of the images corresponding to the recipe and returns them.
     public List<byte[]> getRecipeImage(int recipeId) throws SQLException {
