@@ -75,9 +75,12 @@ public class DatabaseObject{
         return statement.executeQuery("SELECT * FROM USER_FAVORITE WHERE userId = " + userid);
     }
     //Selects the thumbnail of the recipe corresponding to the supplied ID.
-    public ByteArrayInputStream getRecipeThumbnail(int recipeId) throws SQLException {
-        ByteArrayInputStream o = (ByteArrayInputStream) statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId).getBlob(1);
-        return o;
+    public byte[] getRecipeThumbnail(int recipeId) throws SQLException {
+        ByteArrayInputStream inputStream = (ByteArrayInputStream) statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId).getBlob(1);
+        int n = inputStream.available();
+        byte[] bytes = new byte[n];
+        inputStream.read(bytes, 0, n);
+        return bytes;
     }
     //Selects the image of the user corresponding to the supplied ID
     public ResultSet getUserImage(int userId) throws SQLException {
