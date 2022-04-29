@@ -13,6 +13,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import uqac.dim.recipeplus.Ingredient;
@@ -76,11 +78,17 @@ public class DatabaseObject{
     }
     //Selects the thumbnail of the recipe corresponding to the supplied ID.
     public byte[] getRecipeThumbnail(int recipeId) throws SQLException {
-        ByteArrayInputStream inputStream = (ByteArrayInputStream) statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId).getBlob(1);
-        int n = inputStream.available();
-        byte[] bytes = new byte[n];
-        inputStream.read(bytes, 0, n);
-        return bytes;
+        ResultSet rs = statement.executeQuery("SELECT image FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId);
+        return rs.getBytes(1);
+    }
+    //Selects all of the images corresponding to the recipe and returns them.
+    public List<byte[]> getRecipeImage(int recipeId) throws SQLException {
+        ResultSet imageSet = statement.executeQuery("SELECT image FROM RECIPE_IMAGE WHERE recipeId = " + recipeId);
+        List<byte[]> imageList = new ArrayList<byte[]>();
+        while (imageSet.next()){
+            imageList.add(imageSet.getBytes(1));
+        }
+        return imageList;
     }
     //Selects the image of the user corresponding to the supplied ID
     public ResultSet getUserImage(int userId) throws SQLException {
@@ -111,12 +119,10 @@ public class DatabaseObject{
         else
             return false;//If the INSERT failed, we will end up with nothing. Therefore we return false.
         //We insert the thumbnail data into the database.
-        ByteArrayInputStream thumbnailInput = new ByteArrayInputStream(recipeThumbnail);
-        statement.executeUpdate("INSERT INTO RECIPE_THUMBNAIL (recipeId, image) values ("+ newRecipeId +", '"+thumbnailInput+"')");
+        statement.executeUpdate("INSERT INTO RECIPE_THUMBNAIL (recipeId, image) values ("+ newRecipeId +", '"+ Arrays.toString(recipeThumbnail) +"')");
         //We insert all of the pictures inside the list provided in the paramas inside of the database.
         for (byte[] picture:recipePictures) {
-            ByteArrayInputStream pictureInput = new ByteArrayInputStream(picture);
-            statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+pictureInput+"')");
+            statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+ Arrays.toString(picture) +"')");
         }
         //We insert all of the ingredient associated with the recipe.
         for (Ingredient ingredient: ingredientList ) {
