@@ -6,6 +6,7 @@ package uqac.dim.recipeplus.database;
     https://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database
  */
 
+import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -68,7 +69,7 @@ public class DatabaseObject{
     public ResultSet getRecipeIngredients(int recipeId) throws SQLException {
         return statement.executeQuery("SELECT ING.* FROM INGREDIENT ING WHERE ING.id in (SELECT LINK.ingredientId FROM RECIPE_INGREDIENT LINK WHERE LINK.recipeId = "+recipeId+")");
     }
-    //Selects all user favourited recipes corresponding to the ID of the user given.
+    //Selects all user favourite recipes corresponding to the ID of the user given.
     public ResultSet getUserFavouriteRecipes(int userid) throws SQLException {
         return statement.executeQuery("SELECT * FROM USER_FAVORITE WHERE userId = " + userid);
     }
@@ -95,7 +96,7 @@ public class DatabaseObject{
      */
 
     //Adds a new recipe and links images to it, the creatorId will be the user who is logged in.
-    public Boolean addNewRecipeFromLoggedInUser(Recipe recipe, Byte[] recipeThumbnail, List<Byte[]> recipePictures, List<Ingredient> ingredientList) throws SQLException {
+    public Boolean addNewRecipeFromLoggedInUser(Recipe recipe, byte[] recipeThumbnail, List<byte[]> recipePictures, List<Ingredient> ingredientList) throws SQLException {
         String[] generatedColumns = {"id"};
         statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ('"+ activeUserResultSet.getInt(1)+"', '"+recipe.getName()+"', '"+recipe.getDesc()+"', '"+recipe.getInstruc()+"');", generatedColumns);
         int newRecipeId;
@@ -105,9 +106,10 @@ public class DatabaseObject{
         else
             return false;//If the INSERT failed, we will end up with nothing. Therefore we return false.
         //We insert the thumbnail data into the database.
+        ByteArrayInputStream thumbnailInput = new ByteArrayInputStream(recipeThumbnail);
         statement.executeUpdate("INSERT INTO RECIPE_THUMBNAIL (recipeId, image) values ("+ newRecipeId +", '"+recipeThumbnail+"')");
         //We insert all of the pictures inside the list provided in the paramas inside of the database.
-        for (Byte[] picture:recipePictures) {
+        for (byte[] picture:recipePictures) {
             statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+picture+"')");
         }
         //We insert all of the ingredient associated with the recipe.
@@ -117,7 +119,7 @@ public class DatabaseObject{
         return true;
     }
     //Update the given recipe
-    public Boolean updateRecipe(Recipe recipe, Byte[] recipeThumbnail, List<Byte[]> recipePictures, List<Ingredient> ingredientList) throws SQLException {
+    public Boolean updateRecipe(Recipe recipe, byte[] recipeThumbnail, List<byte[]> recipePictures, List<Ingredient> ingredientList) throws SQLException {
         //First of all, we make sure that the creator of the recipe is in fact the user we are authenticated as.
         ResultSet review = statement.executeQuery("SELECT creatorId FROM RECIPE WHERE id = " + recipe.getId());
         if(review.next()){
