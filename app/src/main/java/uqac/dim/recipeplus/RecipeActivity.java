@@ -130,7 +130,7 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
             view.setOnClickListener(favoriteListener);
             ((LinearLayout)findViewById(R.id.favorites)).addView(view);
 
-            ((ImageView)findViewById(R.id.drinkImage)).setImageBitmap(getBitmapFromBytes(r.getImage()));
+            //((ImageView)findViewById(R.id.drinkImage)).setImageBitmap(getBitmapFromBytes(r.getImage()));
         }
     }
 

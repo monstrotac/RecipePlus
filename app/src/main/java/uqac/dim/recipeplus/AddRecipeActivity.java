@@ -89,6 +89,10 @@ public class AddRecipeActivity  extends AppCompatActivity {
 
 
         Recipe data = new Recipe(name, desc, inst, new ArrayList<Ingredient>());
-        database.addNewRecipeFromLoggedInUser(data,bytesData,new ArrayList<byte[]>());
+        try {
+            database.addNewRecipeFromLoggedInUser(data,bytesData,new ArrayList<byte[]>());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
