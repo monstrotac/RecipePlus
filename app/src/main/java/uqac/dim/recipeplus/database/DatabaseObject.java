@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import uqac.dim.recipeplus.Ingredient;
+import uqac.dim.recipeplus.Recipe;
 import uqac.dim.recipeplus.User;
 
 public class DatabaseObject{
@@ -93,9 +95,9 @@ public class DatabaseObject{
      */
 
     //Adds a new recipe and links images to it, the creatorId will be the user who is logged in.
-    public Boolean addNewRecipeFromLoggedInUser(String recipeName, String recipeDescription, String instruction, Byte[] recipeThumbnail, List<Byte[]> recipePictures) throws SQLException {
+    public Boolean addNewRecipeFromLoggedInUser(Recipe recipe, Byte[] recipeThumbnail, List<Byte[]> recipePictures, List<Ingredient> ingredientList) throws SQLException {
         String[] generatedColumns = {"id"};
-        statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ('"+ activeUserResultSet.getInt(1)+"', '"+recipeName+"', '"+recipeDescription+"', '"+instruction+"');", generatedColumns);
+        statement.executeUpdate("INSERT INTO RECIPE (creatorId, name, description, instruction) values ('"+ activeUserResultSet.getInt(1)+"', '"+recipe.getName()+"', '"+recipe.getDesc()+"', '"+recipe.getInstruc()+"');", generatedColumns);
         int newRecipeId;
         ResultSet rs = statement.getGeneratedKeys(); //We acquire data
         if (rs.next())
@@ -108,9 +110,39 @@ public class DatabaseObject{
         for (Byte[] picture:recipePictures) {
             statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+picture+"')");
         }
+        //We insert all of the ingredient associated with the recipe.
+        for (Ingredient ingredient: ingredientList ) {
+            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ newRecipeId);
+        }
         return true;
     }
+    //Update the given recipe
+    public Boolean updateRecipe(Recipe recipe, Byte[] recipeThumbnail, List<Byte[]> recipePictures, List<Ingredient> ingredientList) throws SQLException {
+        //First of all, we make sure that the creator of the recipe is in fact the user we are authenticated as.
+        ResultSet review = statement.executeQuery("SELECT creatorId FROM RECIPE WHERE id = " + recipe.getId());
+        if(review.next()){
+            if(review.getInt(1) != activeUserResultSet.getInt(1))
+                return false; //If the creator doesn't correspond to the one of the Recipe cancel everything.
+        } else
+            return false; //If we end up here it means the Database didn't find the recipe
+        //We start by updating the recipe.
+        statement.executeUpdate("UPDATE RECIPE SET name='"+recipe.getName()+"',description='"+recipe.getDesc()+"',instruction='"+recipe.getInstruc()+"' WHERE id = "+recipe.getId());
+        //We update the thumbnail data.
+        statement.executeUpdate("UPDATE RECIPE_THUMBNAIL image="+recipeThumbnail+" WHERE recipeId="+recipe.getId());
 
+        /*
+        LOTS OF HARDCORE DEBUGGING TO DO HERE I HAVE TO MAKE SURE THAT THE DATABASE WORKS FIRST.
+        //We insert all of the pictures inside the list provided in the paramas inside of the database.
+        for (Byte[] picture:recipePictures) {
+            statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+picture+"')");
+        }
+        //We insert all of the ingredient associated with the recipe.
+        for (Ingredient ingredient: ingredientList ) {
+            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ newRecipeId);
+        }
+        */
+        return true;
+    }
     //Delete the recipe with Id.
     public Boolean deleteRecipeWithId(int recipeId) throws SQLException {
         ResultSet review = statement.executeQuery("SELECT creatorId FROM RECIPE WHERE id = " + recipeId);
@@ -119,9 +151,15 @@ public class DatabaseObject{
                 return false; //If the creator doesn't correspond to the one of the Recipe cancel everything.
         } else
             return false; //If we end up here it means the Database didn't find the recipe to delete.
-        statement.executeUpdate("DELETE FROM");
+
+        statement.executeUpdate("DELETE FROM RECIPE_IMAGE WHERE id = " + recipeId);
+        statement.executeUpdate("DELETE FROM RECIPE_THUMBNAIL WHERE id = " + recipeId);
+        statement.executeUpdate("DELETE FROM RECIPE_INGREDIENT WHERE recipeId = " + recipeId);
+        statement.executeUpdate("DELETE FROM RECIPE WHERE id = " + recipeId);
         return true;
     }
+
+
     /*
     This section is dedicated to all of the user's connection activity.
      */
