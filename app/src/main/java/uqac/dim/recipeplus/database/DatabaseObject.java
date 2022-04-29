@@ -124,7 +124,7 @@ public class DatabaseObject{
         for (byte[] picture:recipePictures) {
             PreparedStatement pictureStatement = activeConnection.prepareStatement("INSERT INTO RECIPE_IMAGE (recipeId, image) VALUES(?,?)");
             pictureStatement.setInt(1, newRecipeId);
-            pictureStatement.setBytes(2, recipeThumbnail);
+            pictureStatement.setBytes(2, picture);
             pictureStatement.executeUpdate();
         }
         //We insert all of the ingredient associated with the recipe.
