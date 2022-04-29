@@ -120,12 +120,14 @@ public class DatabaseObject{
         thumbnailStatement.setInt(1, newRecipeId);
         thumbnailStatement.setBytes(2, recipeThumbnail);
         thumbnailStatement.executeUpdate();
+        thumbnailStatement.close();
         //We insert all of the pictures inside the list provided in the params inside of the database.
         for (byte[] picture:recipePictures) {
             PreparedStatement pictureStatement = activeConnection.prepareStatement("INSERT INTO RECIPE_IMAGE (recipeId, image) VALUES(?,?)");
             pictureStatement.setInt(1, newRecipeId);
             pictureStatement.setBytes(2, picture);
             pictureStatement.executeUpdate();
+            pictureStatement.close();
         }
         //We insert all of the ingredient associated with the recipe.
         for (Ingredient ingredient: recipe.getIngredients() ) {
