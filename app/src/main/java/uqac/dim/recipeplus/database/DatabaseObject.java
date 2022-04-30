@@ -219,7 +219,7 @@ public class DatabaseObject {
     }
 
     //Attempts to register a new user into the database with the data provided.
-    public Boolean attemptUserRegister(String firstName, String lastName, String password, String email, Context context) throws SQLException {
+    public boolean attemptUserRegister(String firstName, String lastName, String password, String email, Bitmap bitmap) throws SQLException {
         //Checks if the user already exists if it does, return false and prevent user creation.
         if(!firstName.contentEquals("") && !lastName.contentEquals("") && !password.contentEquals("") && !email.contentEquals("")){
             ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = \"" + email + "\"");
@@ -240,8 +240,6 @@ public class DatabaseObject {
 
             //We create a default profile picture.
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            Bitmap bitmap = BitmapFactory.decodeFile("/");
-
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] image = stream.toByteArray();
             //We prepare the statement to then insert bytes in the database.
