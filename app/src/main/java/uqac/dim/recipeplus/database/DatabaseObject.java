@@ -46,8 +46,6 @@ public class DatabaseObject {
         activeConnection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
         System.out.println("Database connected!");
         statement = activeConnection.createStatement();
-        //annihilateUsers();
-        //annihilateRecipes();
     }
     public DatabaseObject(String username, String password) throws SQLException {
         activeConnection = DriverManager.getConnection(DATABASE_URL, username, password);
@@ -240,7 +238,7 @@ public class DatabaseObject {
 
             //We create a default profile picture.
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 1, stream);
             byte[] image = stream.toByteArray();
             //We prepare the statement to then insert bytes in the database.
             PreparedStatement userImageStatement = activeConnection.prepareStatement("INSERT INTO USER_IMAGE (userId, image) VALUES(?,?)");
