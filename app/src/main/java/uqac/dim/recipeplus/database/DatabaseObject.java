@@ -6,6 +6,9 @@ package uqac.dim.recipeplus.database;
     https://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database
  */
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
@@ -19,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import uqac.dim.recipeplus.Ingredient;
+import uqac.dim.recipeplus.R;
 import uqac.dim.recipeplus.Recipe;
 import uqac.dim.recipeplus.User;
 
@@ -96,8 +100,13 @@ public class DatabaseObject{
         return imageList;
     }
     //Selects the image of the user corresponding to the supplied ID
-    public ResultSet getUserImage(int userId) throws SQLException {
-        return statement.executeQuery("SELECT image FROM USER_IMAGE WHERE userId = " + userId);
+    public byte[] getUserImage(int userId) throws SQLException {
+        ResultSet rs = statement.executeQuery("SELECT image FROM USER_IMAGE WHERE userId = " + userId);
+        if(rs.next()){
+            byte[] image = rs.getBytes(1);
+            return image;
+        }
+        else return null;
     }
     //Selects and returns all recipes created by selected user
     public ResultSet getUserRecipes(int userId) throws SQLException {
@@ -216,6 +225,9 @@ public class DatabaseObject{
             }
             //Creates the user and returns true to notice that the user creation was a success.
             int o = statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"')");
+            //We add a default profile picture.
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(R.drawable.user_default));
             return true;
         } else {
             return false;
