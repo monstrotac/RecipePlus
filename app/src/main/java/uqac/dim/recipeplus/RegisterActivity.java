@@ -1,6 +1,7 @@
 package uqac.dim.recipeplus;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -47,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         if(!email.equals("") && !password.equals("") && !firstname.equals("") && !lastname.equals("")){
             try {
-                if(database.attemptUserRegister(firstname,lastname,password,email,this)){
+                if(database.attemptUserRegister(firstname,lastname,password,email, BitmapFactory.decodeResource(getResources(), R.drawable.user_default))){
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                 }

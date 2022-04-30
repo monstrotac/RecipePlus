@@ -6,11 +6,18 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,9 +28,12 @@ import java.util.Objects;
 
 import uqac.dim.recipeplus.database.DatabaseObject;
 
-public class AddRecipeActivity  extends AppCompatActivity {
+public class AddRecipeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DatabaseObject database;
     private User user;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,54 @@ public class AddRecipeActivity  extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         user = (User) getIntent().getSerializableExtra("User");
         database.setUser(user);
+
+        drawerLayout = findViewById(R.id.nav_drawer);
+        navigationView = findViewById(R.id.nav_view);
+        toolbar = findViewById(R.id.nav_toolbar);
+
+        navigationView.bringToFront();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+        Intent intent;
+        switch (menuItem.getItemId()){
+
+            case R.id.nav_recipe:
+                intent = new Intent(AddRecipeActivity.this,RecipeActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
+                break;
+            case R.id.nav_myrecipe:
+                intent = new Intent(AddRecipeActivity.this,RecipeActivity.class);
+                intent.putExtra("User",user);
+                intent.putExtra("MyRecipe",true);
+                startActivity(intent);
+                break;
+            case R.id.nav_addrecipe:
+                intent = new Intent(AddRecipeActivity.this,AddRecipeActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
+                break;
+            case R.id.nav_profile:
+                intent = new Intent(AddRecipeActivity.this,ProfileActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
+                break;
+            case R.id.nav_logout:
+                intent = new Intent(AddRecipeActivity.this,MainActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+        return  true;
     }
 
     public void takePicture(View view) {
