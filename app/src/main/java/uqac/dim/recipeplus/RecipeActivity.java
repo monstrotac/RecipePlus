@@ -82,6 +82,10 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
                 startActivity(intent);
                 break;
             case R.id.nav_myrecipe:
+                intent = new Intent(RecipeActivity.this,RecipeActivity.class);
+                intent.putExtra("User",user);
+                intent.putExtra("MyRecipe",true);
+                startActivity(intent);
                 break;
             case R.id.nav_addrecipe:
                 intent = new Intent(RecipeActivity.this,AddRecipeActivity.class);
@@ -106,7 +110,12 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
         ResultSet rs = null;
         List<Recipe> data = new ArrayList<Recipe>();
         try {
-            rs = database.getAllRecipes(false);
+            if(getIntent().getSerializableExtra("MyRecipe") != null){
+                rs = database.getUserRecipes(user.getId());
+            }
+            else{
+                rs = database.getAllRecipes(false);
+            }
 
             while(rs.next()){
 
@@ -132,18 +141,12 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
             ((LinearLayout)findViewById(R.id.favorites)).addView(view);
 
             try {
-                ((ImageView)findViewById(R.id.drinkImage)).setImageBitmap(getBitmapFromBytes(database.getRecipeThumbnail(r.getId())));
+                byte[] byteArray = database.getRecipeThumbnail(r.getId());
+                ((ImageView)view.findViewById(R.id.drinkImage)).setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
-    }
-
-    private Bitmap getBitmapFromBytes(byte[] bytes) {
-        if (bytes != null) {
-            return BitmapFactory.decodeByteArray(bytes, 0 ,bytes.length);
-        }
-        return null;
     }
 
     private View.OnClickListener favoriteListener = new View.OnClickListener() {
