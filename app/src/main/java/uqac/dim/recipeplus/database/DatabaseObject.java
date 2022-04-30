@@ -8,6 +8,7 @@ package uqac.dim.recipeplus.database;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -224,10 +225,27 @@ public class DatabaseObject{
                 }
             }
             //Creates the user and returns true to notice that the user creation was a success.
-            int o = statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"')");
+            String[] generatedColumns = {"id"};
+            statement.executeUpdate("INSERT INTO USER (firstName, lastName, password, email) values ('"+firstName+"', '"+lastName+"', '"+password+"', '"+email+"')", generatedColumns);
+            int newUserId;
+            ResultSet rs = statement.getGeneratedKeys(); //We acquire data
+            if (rs.next())
+                newUserId = rs.getInt(1); //With the help of a little Geomancy, we acquire the ID from the newest recipe.
+            else
+                return false;//If the INSERT failed, we will end up with nothing. Therefore we return false.
+
             //We add a default profile picture.
+            Uri path = Uri.parse("android.resource://uqac.dim.recipeplus/" + R.drawable.user_default);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(R.drawable.user_default));
+            Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(path));
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] image = stream.toByteArray();
+
+            PreparedStatement userImageStatement = activeConnection.prepareStatement("INSERT INTO USER_IMAGE (userId, image) VALUES(?,?)");
+            userImageStatement.setInt(1, newUserId);
+            userImageStatement.setBytes(2, image);
+            userImageStatement.executeUpdate();
+            userImageStatement.close();
             return true;
         } else {
             return false;
