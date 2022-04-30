@@ -42,6 +42,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:layout_marginStart="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:background="@drawable/layout_bg"
             android:theme="@style/Theme.RecipePlus.recipeName"
             android:orientation="horizontal">
@@ -64,6 +68,10 @@
             android:layout_height="wrap_content"
             android:background="@drawable/layout_bg"
             android:theme="@style/Theme.RecipePlus.recipeName"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:layout_marginTop="25dp"
             android:layout_marginStart="15dp"
             android:orientation="horizontal">
