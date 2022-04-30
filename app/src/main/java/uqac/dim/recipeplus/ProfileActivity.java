@@ -67,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
         try {
             byte[] byteArray = database.getUserImage(user.getId());
-            ((ImageView)findViewById(R.id.userPirture)).setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+            ((ImageView)findViewById(R.id.userPicture)).setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
