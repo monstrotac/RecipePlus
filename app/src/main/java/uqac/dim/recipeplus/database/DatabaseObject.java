@@ -237,7 +237,7 @@ public class DatabaseObject{
             //We add a default profile picture.
             Uri path = Uri.parse("android.resource://uqac.dim.recipeplus/" + R.drawable.user_default);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(path));
+            Bitmap bitmap = BitmapFactory.decodeFile(path.getPath());
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] image = stream.toByteArray();
 
