@@ -234,13 +234,13 @@ public class DatabaseObject{
             else
                 return false;//If the INSERT failed, we will end up with nothing. Therefore we return false.
 
-            //We add a default profile picture.
+            //We create a default profile picture.
             Uri path = Uri.parse("android.resource://uqac.dim.recipeplus/" + R.drawable.user_default);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             Bitmap bitmap = BitmapFactory.decodeFile(path.getPath());
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] image = stream.toByteArray();
-
+            //We prepare the statement to then insert bytes in the database.
             PreparedStatement userImageStatement = activeConnection.prepareStatement("INSERT INTO USER_IMAGE (userId, image) VALUES(?,?)");
             userImageStatement.setInt(1, newUserId);
             userImageStatement.setBytes(2, image);
