@@ -6,6 +6,8 @@ package uqac.dim.recipeplus.database;
     https://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database
  */
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -27,7 +29,7 @@ import uqac.dim.recipeplus.R;
 import uqac.dim.recipeplus.Recipe;
 import uqac.dim.recipeplus.User;
 
-public class DatabaseObject{
+public class DatabaseObject {
     //constant variables
     protected static final String PASSWORD = "UQAC2022";
     protected static final String USERNAME = "RECIPEPLUSROOT";
@@ -44,6 +46,8 @@ public class DatabaseObject{
         activeConnection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
         System.out.println("Database connected!");
         statement = activeConnection.createStatement();
+        //annihilateUsers();
+        //annihilateRecipes();
     }
     public DatabaseObject(String username, String password) throws SQLException {
         activeConnection = DriverManager.getConnection(DATABASE_URL, username, password);
@@ -215,7 +219,7 @@ public class DatabaseObject{
     }
 
     //Attempts to register a new user into the database with the data provided.
-    public Boolean attemptUserRegister(String firstName, String lastName, String password, String email) throws SQLException {
+    public Boolean attemptUserRegister(String firstName, String lastName, String password, String email, Context context) throws SQLException {
         //Checks if the user already exists if it does, return false and prevent user creation.
         if(!firstName.contentEquals("") && !lastName.contentEquals("") && !password.contentEquals("") && !email.contentEquals("")){
             ResultSet attempt = statement.executeQuery("SELECT id, firstName, lastName FROM USER WHERE email = \"" + email + "\"");
@@ -235,9 +239,9 @@ public class DatabaseObject{
                 return false;//If the INSERT failed, we will end up with nothing. Therefore we return false.
 
             //We create a default profile picture.
-            Uri path = Uri.parse("android.resource://uqac.dim.recipeplus/" + R.drawable.user_default);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            Bitmap bitmap = BitmapFactory.decodeFile(path.getPath());
+            Bitmap bitmap = BitmapFactory.decodeFile("/");
+
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] image = stream.toByteArray();
             //We prepare the statement to then insert bytes in the database.
