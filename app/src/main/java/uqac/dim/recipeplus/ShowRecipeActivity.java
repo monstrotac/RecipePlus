@@ -1,24 +1,37 @@
 package uqac.dim.recipeplus;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import uqac.dim.recipeplus.database.DatabaseObject;
 
-public class ShowRecipeActivity extends AppCompatActivity {
+public class ShowRecipeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //Gestion Image: Picasso / Glide
 
     private DatabaseObject database;
     private User user;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +43,22 @@ public class ShowRecipeActivity extends AppCompatActivity {
             throwables.printStackTrace();
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         setPageData((Recipe) getIntent().getSerializableExtra("Recipe"));
         user = (User) getIntent().getSerializableExtra("User");
+
+
+        drawerLayout = findViewById(R.id.nav_drawer);
+        navigationView = findViewById(R.id.nav_view);
+        toolbar = findViewById(R.id.nav_toolbar);
+
+        navigationView.bringToFront();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setPageData (Recipe r){
@@ -77,5 +103,41 @@ public class ShowRecipeActivity extends AppCompatActivity {
 
         return ingredients;
 
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+        Intent intent;
+        switch (menuItem.getItemId()){
+
+            case R.id.nav_recipe:
+                intent = new Intent(ShowRecipeActivity.this,RecipeActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
+                break;
+            case R.id.nav_myrecipe:
+                intent = new Intent(ShowRecipeActivity.this,RecipeActivity.class);
+                intent.putExtra("User",user);
+                intent.putExtra("MyRecipe",true);
+                startActivity(intent);
+                break;
+            case R.id.nav_addrecipe:
+                intent = new Intent(ShowRecipeActivity.this,AddRecipeActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
+                break;
+            case R.id.nav_profile:
+                intent = new Intent(ShowRecipeActivity.this,ProfileActivity.class);
+                intent.putExtra("User",user);
+                startActivity(intent);
+                break;
+            case R.id.nav_logout:
+                intent = new Intent(ShowRecipeActivity.this,MainActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+        return  true;
     }
 }

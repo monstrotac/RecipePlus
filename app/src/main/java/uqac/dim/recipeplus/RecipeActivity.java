@@ -1,5 +1,6 @@
 package uqac.dim.recipeplus;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -47,16 +48,16 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
+        user = (User) getIntent().getSerializableExtra("User");
         try {
             database = new DatabaseObject();
+            database.setUser(user);
             recipes = loadRecipes();
             generateViewData(recipes);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        user = (User) getIntent().getSerializableExtra("User");
-        database.setUser(user);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
 
         drawerLayout = findViewById(R.id.nav_drawer);
         navigationView = findViewById(R.id.nav_view);
@@ -71,6 +72,7 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
         Intent intent;

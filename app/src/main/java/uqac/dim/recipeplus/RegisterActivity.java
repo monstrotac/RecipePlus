@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         if(!email.equals("") && !password.equals("") && !firstname.equals("") && !lastname.equals("")){
             try {
-                if(database.attemptUserRegister(firstname,lastname,password,email)){
+                if(database.attemptUserRegister(firstname,lastname,password,email,this)){
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                 }

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import uqac.dim.recipeplus.database.DatabaseObject;
 
@@ -34,9 +35,10 @@ public class AddRecipeActivity  extends AppCompatActivity {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         user = (User) getIntent().getSerializableExtra("User");
         database.setUser(user);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void takePicture(View view) {

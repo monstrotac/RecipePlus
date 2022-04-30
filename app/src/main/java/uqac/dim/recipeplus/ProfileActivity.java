@@ -42,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         user = (User) getIntent().getSerializableExtra("User");
         database.setUser(user);
 
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         loadData(user);
 
 
