@@ -156,7 +156,7 @@ public class DatabaseObject {
         return true;
     }
     //Update the given recipe
-    public Boolean updateRecipe(Recipe recipe, byte[] recipeThumbnail, List<byte[]> recipePictures, List<Ingredient> ingredientList) throws SQLException {
+    public Boolean updateRecipe(Recipe recipe, byte[] recipeThumbnail, List<byte[]> recipePictures) throws SQLException {
         //First of all, we make sure that the creator of the recipe is in fact the user we are authenticated as.
         ResultSet review = statement.executeQuery("SELECT creatorId FROM RECIPE WHERE id = " + recipe.getId());
         if(review.next()){
@@ -166,20 +166,54 @@ public class DatabaseObject {
             return false; //If we end up here it means the Database didn't find the recipe
         //We start by updating the recipe.
         statement.executeUpdate("UPDATE RECIPE SET name='"+recipe.getName()+"',description='"+recipe.getDesc()+"',instruction='"+recipe.getInstruc()+"' WHERE id = "+recipe.getId());
-        //We update the thumbnail data.
-        statement.executeUpdate("UPDATE RECIPE_THUMBNAIL image="+recipeThumbnail+" WHERE recipeId="+recipe.getId());
+        //We prepare a statement to update the thumbnail data in the database.
+        PreparedStatement thumbnailStatement = activeConnection.prepareStatement("UPDATE RECIPE_THUMBNAIL image=? WHERE recipeId=?");
+        thumbnailStatement.setBytes(1, recipeThumbnail);
+        thumbnailStatement.setInt(2, recipe.getId());
+        thumbnailStatement.executeUpdate();
+        thumbnailStatement.close();
+        //We make a query to find all of the pictures currently linked to the recipe.
+        ResultSet recipePictureRS = statement.executeQuery("SELECT * FROM RECIPE_IMAGE WHERE recipeId = "+recipe.getId());
+        //These two array are used to detect which pictures no longer belong to the database.
+        boolean[] pictureExistenceChecker = new boolean[recipePictureRS.getFetchSize()];
+        int[] pictureToDeleteArray = new int[recipePictureRS.getFetchSize()];
+        for (boolean value : pictureExistenceChecker) {
+            value = false;
+        }
+        //We loop through the result of our query to find what needs to change in the current image list.
+        for (byte[] picture : recipePictures) {
+            boolean pictureFound = false;
+            int index = 0;
+            while (recipePictureRS.next()&& !pictureFound){
+                if (recipePictureRS.getBytes(3) == picture){
+                    pictureFound = true;
+                    pictureExistenceChecker[index] = true;
+                    pictureToDeleteArray[index] = recipePictureRS.getInt(1);
+                }
+                index++;
+            }
+            //If the picture isn't already in the database, then we add it.
+            if(!pictureFound){
+                PreparedStatement pictureStatement = activeConnection.prepareStatement("INSERT INTO RECIPE_IMAGE (recipeId, image) VALUES(?,?)");
+                pictureStatement.setInt(1, recipe.getId());
+                pictureStatement.setBytes(2, picture);
+                pictureStatement.executeUpdate();
+                pictureStatement.close();
+            }
+        }
+        //We delete the pictures which no longer belong.
+        for (int i = 0; i < pictureExistenceChecker.length; i++)
+        {
+            if (!pictureExistenceChecker[i]){
+                statement.executeUpdate("DELETE FROM RECIPE_IMAGE WHERE id = " + pictureToDeleteArray[i]);
+            }
+        }
 
-        /*
-        LOTS OF HARDCORE DEBUGGING TO DO HERE I HAVE TO MAKE SURE THAT THE DATABASE WORKS FIRST.
-        //We insert all of the pictures inside the list provided in the paramas inside of the database.
-        for (Byte[] picture:recipePictures) {
-            statement.executeUpdate("INSERT INTO RECIPE_IMAGE (recipeId, image) values ("+ newRecipeId +", '"+picture+"')");
-        }
         //We insert all of the ingredient associated with the recipe.
-        for (Ingredient ingredient: ingredientList ) {
-            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ newRecipeId);
+        for (Ingredient ingredient: recipe.getIngredients() ) {
+           // statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ newRecipeId);
         }
-        */
+
         return true;
     }
     //Delete the recipe with Id.
@@ -191,13 +225,20 @@ public class DatabaseObject {
         } else
             return false; //If we end up here it means the Database didn't find the recipe to delete.
 
-        statement.executeUpdate("DELETE FROM RECIPE_IMAGE WHERE id = " + recipeId);
-        statement.executeUpdate("DELETE FROM RECIPE_THUMBNAIL WHERE id = " + recipeId);
+        statement.executeUpdate("DELETE FROM RECIPE_IMAGE WHERE recipeId = " + recipeId);
+        statement.executeUpdate("DELETE FROM RECIPE_THUMBNAIL WHERE recipeId = " + recipeId);
         statement.executeUpdate("DELETE FROM RECIPE_INGREDIENT WHERE recipeId = " + recipeId);
         statement.executeUpdate("DELETE FROM RECIPE WHERE id = " + recipeId);
         return true;
     }
-
+    //Update the profile picture of the logged in user with the one provided as a param.
+    public void updateUserProfilePicture(byte[] picture) throws SQLException {
+        PreparedStatement pictureStatement = activeConnection.prepareStatement("UPDATE USER_IMAGE SET image=? WHERE userId=?");
+        pictureStatement.setBytes(1, picture);
+        pictureStatement.setInt(2, loggedInUserObject.getId());
+        pictureStatement.executeUpdate();
+        pictureStatement.close();
+    }
 
     /*
     This section is dedicated to all of the user's connection activity.
