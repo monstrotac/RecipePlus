@@ -74,7 +74,7 @@ public class DatabaseObject {
     }
     //Selects all existing ingredients in the database
     public ResultSet getAllIngredients() throws SQLException {
-        return statement.executeQuery("SELECT * FROM INGREDIENT ORDER BY id DESC");
+        return statement.executeQuery("SELECT * FROM INGREDIENT");
     }
     //Selects all ingredient association link associated to the recipeid given
     public ResultSet getIngredientsAssociationWithRecipeId(int recipeId) throws SQLException {
