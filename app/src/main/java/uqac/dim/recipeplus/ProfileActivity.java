@@ -1,9 +1,13 @@
 package uqac.dim.recipeplus;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +20,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -72,6 +78,54 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             throwables.printStackTrace();
         }
 
+    }
+
+    public void takePicture(View view) {
+        dispatchTakePictureIntent();
+    }
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePictureIntent() {
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+
+        Intent chooser = Intent.createChooser(galleryIntent, "Some text here");
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { takePictureIntent });
+
+        try {
+            startActivityForResult(chooser, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            // display error state to the user
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ImageView imageView = (ImageView)findViewById(R.id.userPicture);
+            imageView.setImageBitmap(imageBitmap);
+
+
+            try {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] bytesData = stream.toByteArray();
+                stream.close();
+
+                database.updateUserProfilePicture(bytesData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+        }
     }
 
     @Override
