@@ -104,7 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:onClick="Register"
-        android:text="@string/register">
-    </Button>
+        android:text="@string/register"
+        android:textColor="@color/white"></Button>
 
 </LinearLayout>
