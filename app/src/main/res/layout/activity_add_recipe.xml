@@ -145,6 +145,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:orientation="vertical">
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -152,7 +153,8 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:onClick="saveRecipe"
-                    android:text="@string/recipe_save">
+                    android:text="@string/recipe_save"
+                    android:textColor="@color/white">
 
                 </Button>
 
