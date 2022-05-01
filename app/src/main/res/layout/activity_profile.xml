@@ -34,6 +34,7 @@
             android:layout_height="170dp"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
+            android:onClick="takePicture"
             android:id="@+id/userPicture">
         </ImageView>
 
