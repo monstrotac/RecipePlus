@@ -151,7 +151,7 @@ public class DatabaseObject {
         }
         //We insert all of the ingredient associated with the recipe.
         for (Ingredient ingredient: recipe.getIngredients() ) {
-            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ newRecipeId);
+            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ newRecipeId+")");
         }
         return true;
     }
