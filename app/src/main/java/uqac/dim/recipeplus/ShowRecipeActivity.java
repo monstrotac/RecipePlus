@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +35,8 @@ public class ShowRecipeActivity extends AppCompatActivity implements NavigationV
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private Recipe currentRecipe;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,8 @@ public class ShowRecipeActivity extends AppCompatActivity implements NavigationV
         database.setUser(user);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
-        setPageData((Recipe) getIntent().getSerializableExtra("Recipe"));
+        currentRecipe = (Recipe) getIntent().getSerializableExtra("Recipe");
+        setPageData(currentRecipe);
 
         drawerLayout = findViewById(R.id.nav_drawer);
         navigationView = findViewById(R.id.nav_view);
@@ -87,6 +91,35 @@ public class ShowRecipeActivity extends AppCompatActivity implements NavigationV
 
                 ((LinearLayout)findViewById(R.id.drinkIngredient)).addView(tempView);
             }
+            try {
+                ResultSet rs = database.getRecipeCreator(r.getCreatorId());
+                while (rs.next()){
+                    ((TextView)findViewById(R.id.username)).setText(rs.getString(1) + " " + rs.getString(2));
+                }
+
+                byte[] byteArray = database.getUserImage(r.getCreatorId());
+                ((ImageView)findViewById(R.id.userImage)).setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+            if(user.getId() == r.getCreatorId()){
+                View tempView = getLayoutInflater().inflate(R.layout.button_layout, null,false);
+                LinearLayout v = (LinearLayout) findViewById(R.id.extraButton);
+                v.addView(tempView);
+            }
+        }
+    }
+
+    public void editRecipe(){
+
+    }
+
+    public void deleteRecipe(){
+        try {
+            database.deleteRecipeWithId(currentRecipe.getId());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 

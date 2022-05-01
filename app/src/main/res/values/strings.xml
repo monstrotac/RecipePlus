@@ -27,6 +27,9 @@
     <string name="add_image">Change Recipe Image</string>
     <string name="add_data">Recipe Data</string>
     <string name="add_ingredients">Ingredient List</string>
+    <string name="creator"><i><u>Drink Creator:</u></i></string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 
 
 

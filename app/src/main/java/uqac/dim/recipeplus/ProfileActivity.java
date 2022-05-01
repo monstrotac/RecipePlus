@@ -1,5 +1,6 @@
 package uqac.dim.recipeplus;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -92,38 +97,56 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
 
-        Intent chooser = Intent.createChooser(galleryIntent, "Some text here");
-        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { takePictureIntent });
+        Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+        chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent);
+        chooser.putExtra(Intent.EXTRA_TITLE, "Select from:");
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { galleryIntent });
+
+        Intent[] intentArray = { takePictureIntent };
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
 
         try {
-            startActivityForResult(chooser, REQUEST_IMAGE_CAPTURE);
+            someActivityResultLauncher.launch(chooser);
         } catch (ActivityNotFoundException e) {
             // display error state to the user
         }
     }
 
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        Bundle extras = data.getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        ImageView imageView = (ImageView)findViewById(R.id.userPicture);
+                        imageView.setImageBitmap(imageBitmap);
+
+
+                        try {
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            byte[] bytesData = stream.toByteArray();
+                            stream.close();
+
+                            database.updateUserProfilePicture(bytesData);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                    }
+                }
+            });
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView imageView = (ImageView)findViewById(R.id.userPicture);
-            imageView.setImageBitmap(imageBitmap);
 
-
-            try {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] bytesData = stream.toByteArray();
-                stream.close();
-
-                database.updateUserProfilePicture(bytesData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
 
         }
     }

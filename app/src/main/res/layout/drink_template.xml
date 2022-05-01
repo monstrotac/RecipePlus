@@ -38,6 +38,14 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/layout_bg"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layout_bg"
+                    android:gravity="center"
+                    android:id="@+id/extraButton"
+                    android:orientation="horizontal">
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -55,6 +63,52 @@
                     android:layout_marginTop="15dp"
                     android:id="@+id/drinkImage">
                 </ImageView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:id="@+id/creator"
+                    android:layout_gravity="center"
+                    android:background="@drawable/layout_bg"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:theme="@style/Theme.RecipePlus.titles"
+                        android:layout_height="wrap_content"
+                        android:text="@string/creator">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:id="@+id/userImage">
+
+                        </ImageView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_gravity="center"
+                            android:theme="@style/Theme.RecipePlus.ingredients"
+                            android:id="@+id/username">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
