@@ -2,9 +2,11 @@ package uqac.dim.recipeplus;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -69,6 +71,13 @@ public class ShowRecipeActivity extends AppCompatActivity implements NavigationV
             ((TextView)findViewById(R.id.drinkInstruct)).setText(r.getInstruc());
             ((TextView)findViewById(R.id.drinkDesc)).setText(r.getDesc());
             r.setIngredients(getIngredients(r.getId()));
+
+            try {
+                byte[] byteArray = database.getRecipeThumbnail(r.getId());
+                ((ImageView)findViewById(R.id.drinkImage)).setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
 
             for(Ingredient ing:r.getIngredients()){
                 View tempView = getLayoutInflater().inflate(R.layout.ingredient_template, null,false);

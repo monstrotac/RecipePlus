@@ -106,9 +106,16 @@ public class AddRecipeActivity  extends AppCompatActivity implements NavigationV
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private void dispatchTakePictureIntent() {
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+
+        Intent chooser = Intent.createChooser(galleryIntent, "Some text here");
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { takePictureIntent });
+
         try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            startActivityForResult(chooser, REQUEST_IMAGE_CAPTURE);
         } catch (ActivityNotFoundException e) {
             // display error state to the user
         }
