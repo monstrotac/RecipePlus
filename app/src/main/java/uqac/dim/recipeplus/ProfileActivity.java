@@ -63,7 +63,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         
         ((TextView)findViewById(R.id.email)).setText(user.getEmail());
 
-        ((TextView)findViewById(R.id.name)).setText(user.getFirstname());
+        ((TextView)findViewById(R.id.name)).setText(user.getFirstname() + " " + user.getLastname());
 
         try {
             byte[] byteArray = database.getUserImage(user.getId());

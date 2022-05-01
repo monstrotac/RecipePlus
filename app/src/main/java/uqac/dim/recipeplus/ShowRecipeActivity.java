@@ -43,10 +43,11 @@ public class ShowRecipeActivity extends AppCompatActivity implements NavigationV
             throwables.printStackTrace();
         }
 
+        user = (User) getIntent().getSerializableExtra("User");
+        database.setUser(user);
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         setPageData((Recipe) getIntent().getSerializableExtra("Recipe"));
-        user = (User) getIntent().getSerializableExtra("User");
-
 
         drawerLayout = findViewById(R.id.nav_drawer);
         navigationView = findViewById(R.id.nav_view);
