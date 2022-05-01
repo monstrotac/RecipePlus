@@ -8,8 +8,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -21,6 +26,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +40,7 @@ public class AddRecipeActivity  extends AppCompatActivity implements NavigationV
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,8 @@ public class AddRecipeActivity  extends AppCompatActivity implements NavigationV
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        setIngredients();
     }
 
 
@@ -97,6 +106,31 @@ public class AddRecipeActivity  extends AppCompatActivity implements NavigationV
         }
 
         return  true;
+    }
+
+    private void setIngredients (){
+        try {
+            ResultSet rs = database.getAllIngredients();
+
+            while (rs.next()){
+                ingredients.add(new Ingredient(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getFloat(4)));
+            }
+            showIngredients();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private void showIngredients(){
+
+        for(Ingredient ing:ingredients){
+            View tempView = getLayoutInflater().inflate(R.layout.list_layout, null,false);
+            tempView.setId(ing.getId());
+            ((CheckBox)tempView.findViewById(ing.getId())).setText(ing.getName() + " : " + ing.getDesc() + " : " + ing.getAvgPrice() + "$");
+
+            ((LinearLayout)findViewById(R.id.radio_ingredient)).addView(tempView);
+        }
     }
 
     public void takePicture(View view) {
@@ -151,8 +185,15 @@ public class AddRecipeActivity  extends AppCompatActivity implements NavigationV
         byte[] bytesData = stream.toByteArray();
         stream.close();
 
+        ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
 
-        Recipe data = new Recipe(name, desc, inst, new ArrayList<Ingredient>());
+        for(Ingredient ing:ingredients){
+            if(((CheckBox)findViewById(ing.getId())).isChecked()){
+                ingredientList.add(ing);
+            }
+        }
+
+        Recipe data = new Recipe(name, desc, inst, ingredientList);
         try {
             database.addNewRecipeFromLoggedInUser(data,bytesData,new ArrayList<byte[]>());
         } catch (SQLException throwables) {
