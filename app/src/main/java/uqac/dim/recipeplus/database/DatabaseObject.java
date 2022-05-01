@@ -212,7 +212,7 @@ public class DatabaseObject {
         //We delete all of the ingredients associated with the recipe and then insert them again.
         statement.executeUpdate("DELETE FROM RECIPE_INGREDIENT WHERE recipeId = " + recipe.getId());
         for (Ingredient ingredient: recipe.getIngredients() ) {
-            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ newRecipeId);
+            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ recipe.getId());
         }
 
         return true;
