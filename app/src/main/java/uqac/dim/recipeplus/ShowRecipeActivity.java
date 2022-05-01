@@ -118,6 +118,9 @@ public class ShowRecipeActivity extends AppCompatActivity implements NavigationV
     public void deleteRecipe(){
         try {
             database.deleteRecipeWithId(currentRecipe.getId());
+            Intent intent = new Intent(ShowRecipeActivity.this,RecipeActivity.class);
+            intent.putExtra("User",user);
+            startActivity(intent);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
