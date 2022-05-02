@@ -165,9 +165,9 @@ public class DatabaseObject {
         } else
             return false; //If we end up here it means the Database didn't find the recipe
         //We start by updating the recipe.
-        statement.executeUpdate("UPDATE RECIPE SET name='"+recipe.getName()+"',description='"+recipe.getDesc()+"',instruction='"+recipe.getInstruc()+"' WHERE id = "+recipe.getId());
+        statement.executeUpdate("UPDATE RECIPE SET name='"+recipe.getName()+"', description='"+recipe.getDesc()+"', instruction='"+recipe.getInstruc()+"' WHERE id = "+recipe.getId());
         //We prepare a statement to update the thumbnail data in the database.
-        PreparedStatement thumbnailStatement = activeConnection.prepareStatement("UPDATE RECIPE_THUMBNAIL image=? WHERE recipeId=?");
+        PreparedStatement thumbnailStatement = activeConnection.prepareStatement("UPDATE RECIPE_THUMBNAIL SET image=? WHERE recipeId=?");
         thumbnailStatement.setBytes(1, recipeThumbnail);
         thumbnailStatement.setInt(2, recipe.getId());
         thumbnailStatement.executeUpdate();
@@ -212,7 +212,7 @@ public class DatabaseObject {
         //We delete all of the ingredients associated with the recipe and then insert them again.
         statement.executeUpdate("DELETE FROM RECIPE_INGREDIENT WHERE recipeId = " + recipe.getId());
         for (Ingredient ingredient: recipe.getIngredients() ) {
-            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ recipe.getId());
+            statement.executeUpdate("INSERT INTO RECIPE_INGREDIENT (ingredientId, recipeId) values ("+ingredient.getId()+", "+ recipe.getId()+")");
         }
 
         return true;
