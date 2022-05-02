@@ -218,6 +218,7 @@ public class EditRecipeActivity extends AppCompatActivity implements NavigationV
 
         Recipe data = new Recipe(name, desc, inst, ingredientList);
         data.setId(currentRecipe.getId());
+        data.setCreatorId(currentRecipe.getCreatorId());
         try {
             database.updateRecipe(data,bytesData,new ArrayList<byte[]>());
         } catch (SQLException throwables) {

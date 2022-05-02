@@ -155,7 +155,6 @@ public class RecipeActivity extends AppCompatActivity implements NavigationView.
         @Override
         public void onClick(View view) {
             Recipe temp = findRecipe(view.getId());
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             Intent intent = new Intent(RecipeActivity.this,ShowRecipeActivity.class);
             intent.putExtra("User",user);
