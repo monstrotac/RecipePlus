@@ -112,7 +112,10 @@ public class ShowRecipeActivity extends AppCompatActivity implements NavigationV
     }
 
     public void editRecipe(View view){
-
+        Intent intent = new Intent(ShowRecipeActivity.this,EditRecipeActivity.class);
+        intent.putExtra("User",user);
+        intent.putExtra("Recipe",currentRecipe);
+        startActivity(intent);
     }
 
     public void deleteRecipe(View view){
@@ -128,16 +131,11 @@ public class ShowRecipeActivity extends AppCompatActivity implements NavigationV
 
     private ArrayList<Ingredient> getIngredients(int id){
 
-
-        System.out.println(id);
-
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
         try {
             ResultSet ing = database.getRecipeIngredients(id);
 
             while (ing.next()){
-
-                System.out.println(ing.getInt(1));
                 ingredients.add(new Ingredient(ing.getInt(1),ing.getString(2),ing.getString(3),ing.getFloat(4)));
             }
 
