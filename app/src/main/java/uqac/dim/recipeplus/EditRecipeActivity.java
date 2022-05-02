@@ -47,7 +47,7 @@ public class EditRecipeActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_recipe);
+        setContentView(R.layout.activity_edit_recipe);
 
         try {
             database = new DatabaseObject();
@@ -223,8 +223,9 @@ public class EditRecipeActivity extends AppCompatActivity implements NavigationV
             throwables.printStackTrace();
         }
 
-        Intent intent = new Intent(EditRecipeActivity.this, RecipeActivity.class);
+        Intent intent = new Intent(EditRecipeActivity.this, ShowRecipeActivity.class);
         intent.putExtra("User",user);
+        intent.putExtra("Recipe",data);
         startActivity(intent);
     }
 }
